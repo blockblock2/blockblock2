@@ -6,7 +6,7 @@
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="https://img.shields.io/badge/Scratch-78%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" width="382" height="48" alt="78 Scratch followers"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="https://img.shields.io/badge/Scratch-79%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" width="382" height="48" alt="79 Scratch followers"></a>
 </p>
 <!-- scratch-followers:blockblock2:end -->
 <p align="center">Follow for SCRATCH CAT accessory</p>
