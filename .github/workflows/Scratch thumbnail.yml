@@ -89,26 +89,4 @@ jobs:
             git commit -m "Update Scratch thumbnail for project $PROJECT_ID"
             git pull --rebase --autostash
             git push
-          fi      - uses: actions/upload-artifact@v4
-        if: github.event_name == 'workflow_dispatch'
-        with:
-          name: scratch-thumbnail-${{ steps.thumb.outputs.project-id }}
-          path: ${{ steps.thumb.outputs.path }}
-          if-no-files-found: error
-
-      - name: Commit thumbnail if it changed
-        if: github.event_name == 'schedule' || inputs.commit
-        env:
-          THUMB: ${{ steps.thumb.outputs.path }}
-          PROJECT_ID: ${{ steps.thumb.outputs.project-id }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- "$THUMB"
-          if git diff --cached --quiet; then
-            echo "Thumbnail unchanged, nothing to commit."
-          else
-            git commit -m "Update Scratch thumbnail for project $PROJECT_ID"
-            git pull --rebase --autostash
-            git push
           fi
