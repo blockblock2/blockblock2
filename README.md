@@ -11,3 +11,9 @@
 </p>
 <!-- scratch-thumbnail:1381537995:end -->
 
+<!-- scratch-followers:blockblock2:start -->
+<p align="center">
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="https://img.shields.io/badge/Scratch-78%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" alt="78 Scratch followers"></a>
+  <a href="https://github.com/blockblock2?tab=followers"><img src="https://img.shields.io/badge/GitHub-0%20followers-181717?style=for-the-badge&logo=github&logoColor=white" alt="0 GitHub followers"></a>
+</p>
+<!-- scratch-followers:blockblock2:end -->
