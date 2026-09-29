@@ -131,9 +131,10 @@ jobs:
               else:
                   print(f"{site}: {n} followers")
 
+          BADGE_HEIGHT = 48  # normal size is 28; change this to make the badges bigger or smaller
           badges = []
           styles = {
-              "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/", "F9A825", "scratch"),
+              "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
               "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
           }
           for site, n in counts.items():
@@ -144,12 +145,12 @@ jobs:
               badges.append(
                   f'  <a href="{link}">'
                   f'<img src="https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white" '
-                  f'alt="{n:,} {site} {label}"></a>'
+                  f'height="{BADGE_HEIGHT}" alt="{n:,} {site} {label}"></a>'
               )
           if not badges:
               raise SystemExit("::error::Couldn't get either follower count, leaving README alone.")
 
-          block = f'{start}\n<p align="center">\n' + "\n".join(badges) + f"\n</p>\n{end}"
+          block = f'{start}\n<p align="center">\n' + "\n  &nbsp;\n".join(badges) + f"\n</p>\n{end}"
           if old:
               text = pattern.sub(lambda m: block, text)
           else:
