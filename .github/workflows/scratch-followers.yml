@@ -137,15 +137,24 @@ jobs:
               "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
               "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
           }
+          def size_attrs(url):
+              # GitHub ignores height on its own, so work out the matching width too.
+              svg = get(url)
+              m = svg and re.search(r'<svg[^>]*?\swidth="([\d.]+)"[^>]*?\sheight="([\d.]+)"', svg)
+              if not m:
+                  print(f"  Couldn't read badge size from {url}, using height only")
+                  return f'height="{BADGE_HEIGHT}"'
+              w, h = float(m.group(1)), float(m.group(2))
+              return f'width="{round(w * BADGE_HEIGHT / h)}" height="{BADGE_HEIGHT}"'
+
           for site, n in counts.items():
               if n is None:
                   continue
               link, color, logo = styles[site]
               label = "follower" if n == 1 else "followers"
+              src = f"https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white"
               badges.append(
-                  f'  <a href="{link}">'
-                  f'<img src="https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white" '
-                  f'height="{BADGE_HEIGHT}" alt="{n:,} {site} {label}"></a>'
+                  f'  <a href="{link}"><img src="{src}" {size_attrs(src)} alt="{n:,} {site} {label}"></a>'
               )
           if not badges:
               raise SystemExit("::error::Couldn't get either follower count, leaving README alone.")
