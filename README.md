@@ -3,5 +3,6 @@
 </p>
 
 <h3 align="center">Welcome to blockblock2's Profile!</h3>
-<p align="center">Developer of the Generic Black series 🕹️</p>
+<p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
+<p align="center">Follow for SCRATCH CAT accessory</p>
 
