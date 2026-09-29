@@ -10,18 +10,18 @@
 </p>
 <!-- scratch-followers:blockblock2:end -->
 
-<!-- scratch-newest-followers:blockblock2:start -->
-<p align="center"><b>Newest followers</b></p>
+<!-- scratch-follower-milestones:blockblock2:start -->
+<p align="center"><b>🏆 Follower milestones</b></p>
 <div align="center">
 
 <table>
-  <tr><td align="center"><a href="https://scratch.mit.edu/users/starlight_jellyfish/"><img src="https://cdn2.scratch.mit.edu/get_image/user/164726098_60x60.png?v=" width="60" height="60" alt="starlight_jellyfish"><br><sub>starlight_jellyfish</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/NodleTIGER/"><img src="https://cdn2.scratch.mit.edu/get_image/user/177463002_60x60.png?v=" width="60" height="60" alt="NodleTIGER"><br><sub>NodleTIGER</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/pokemon___67/"><img src="https://cdn2.scratch.mit.edu/get_image/user/177381794_60x60.png?v=" width="60" height="60" alt="pokemon___67"><br><sub>pokemon___67</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/RED_-n0w1j/"><img src="https://cdn2.scratch.mit.edu/get_image/user/175424866_60x60.png?v=" width="60" height="60" alt="RED_-n0w1j"><br><sub>RED_-n0w1j</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/Iz_Jasi756/"><img src="https://cdn2.scratch.mit.edu/get_image/user/164065828_60x60.png?v=" width="60" height="60" alt="Iz_Jasi756"><br><sub>Iz_Jasi756</sub></a></td></tr>
-  <tr><td align="center"><a href="https://scratch.mit.edu/users/daizygirl8765/"><img src="https://cdn2.scratch.mit.edu/get_image/user/165816215_60x60.png?v=" width="60" height="60" alt="daizygirl8765"><br><sub>daizygirl8765</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/ThisWasNotPlanned/"><img src="https://cdn2.scratch.mit.edu/get_image/user/176133791_60x60.png?v=" width="60" height="60" alt="ThisWasNotPlanned"><br><sub>ThisWasNotPlanned</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/EvilPotatoAilens/"><img src="https://cdn2.scratch.mit.edu/get_image/user/118620450_60x60.png?v=" width="60" height="60" alt="EvilPotatoAilens"><br><sub>EvilPotatoAilens</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/microsoft_clippy/"><img src="https://cdn2.scratch.mit.edu/get_image/user/159091128_60x60.png?v=" width="60" height="60" alt="microsoft_clippy"><br><sub>microsoft_clippy</sub></a></td><td align="center"><a href="https://scratch.mit.edu/users/blocks_TEST/"><img src="https://cdn2.scratch.mit.edu/get_image/user/174504338_60x60.png?v=" width="60" height="60" alt="blocks_TEST"><br><sub>blocks_TEST</sub></a></td></tr>
+  <tr><td align="center"><b>10th</b><br><a href="https://scratch.mit.edu/users/AwesomeKat-1/"><img src="https://cdn2.scratch.mit.edu/get_image/user/123548558_60x60.png?v=" width="60" height="60" alt="AwesomeKat-1"><br><sub>AwesomeKat-1</sub></a></td><td align="center"><b>20th</b><br><a href="https://scratch.mit.edu/users/Onion3S4B/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173254688_60x60.png?v=" width="60" height="60" alt="Onion3S4B"><br><sub>Onion3S4B</sub></a></td><td align="center"><b>30th</b><br><a href="https://scratch.mit.edu/users/icecat2018/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173923164_60x60.png?v=" width="60" height="60" alt="icecat2018"><br><sub>icecat2018</sub></a></td><td align="center"><b>40th</b><br><a href="https://scratch.mit.edu/users/thekidddo/"><img src="https://cdn2.scratch.mit.edu/get_image/user/145061912_60x60.png?v=" width="60" height="60" alt="thekidddo"><br><sub>thekidddo</sub></a></td><td align="center"><b>50th</b><br><a href="https://scratch.mit.edu/users/Wayour3_/"><img src="https://cdn2.scratch.mit.edu/get_image/user/175188478_60x60.png?v=" width="60" height="60" alt="Wayour3_"><br><sub>Wayour3_</sub></a></td></tr>
+  <tr><td align="center"><b>60th</b><br><a href="https://scratch.mit.edu/users/cittykat6633/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173433473_60x60.png?v=" width="60" height="60" alt="cittykat6633"><br><sub>cittykat6633</sub></a></td><td align="center"><b>70th</b><br><a href="https://scratch.mit.edu/users/F4Forlife/"><img src="https://cdn2.scratch.mit.edu/get_image/user/176476423_60x60.png?v=" width="60" height="60" alt="F4Forlife"><br><sub>F4Forlife</sub></a></td><td align="center"><b>80th</b><br><a href="https://scratch.mit.edu/users/NodleTIGER/"><img src="https://cdn2.scratch.mit.edu/get_image/user/177463002_60x60.png?v=" width="60" height="60" alt="NodleTIGER"><br><sub>NodleTIGER</sub></a></td></tr>
 </table>
 
 </div>
-<p align="center"><a href="Follower.md">See all 79 followers →</a></p>
-<!-- scratch-newest-followers:blockblock2:end -->
+<!-- scratch-follower-milestones:blockblock2:end -->
+
 <p align="center">Follow for SCRATCH CAT accessory</p>
 <!-- scratch-thumbnail:1381537995:start -->
 <p align="center">
