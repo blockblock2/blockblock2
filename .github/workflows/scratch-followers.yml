@@ -28,7 +28,7 @@ jobs:
   followers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Always start from the newest main, even on "Re-run jobs".
           ref: ${{ github.event.repository.default_branch }}
@@ -76,6 +76,9 @@ jobs:
                       return None
                   page = json.loads(body)
                   for p in page:
+                      if any(x["name"] == p["username"] for x in people):
+                          print(f"  {p['username']} showed up twice in Scratch's list, skipping the repeat")
+                          continue
                       imgs = (p.get("profile") or {}).get("images") or {}
                       people.append({
                           "name": p["username"],
@@ -103,6 +106,8 @@ jobs:
           if scratch is None and followers is not None:
               print("Followers page didn't work, counting the list instead")
               scratch = len(followers)
+          if followers is not None:
+              print(f"Followers page says {scratch}, Scratch's API list has {len(followers)} people")
           counts = {"Scratch": scratch}
           if os.environ.get("SHOW_GITHUB", "").lower() == "true":
               counts["GitHub"] = github_count()
@@ -193,7 +198,8 @@ jobs:
                   oldest_first = list(reversed(followers))
                   milestones = [
                       {**oldest_first[k - 1], "n": k}
-                      for k in range(every, len(oldest_first) + 1, every)
+                      # Never go past the real count from the followers page.
+                      for k in range(every, min(len(oldest_first), shown.get("Scratch", len(oldest_first))) + 1, every)
                   ]
                   if milestones:
                       table = '<div align="center">\n\n' + grid(milestones, 5) + "\n\n</div>"
