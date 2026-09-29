@@ -1,18 +1,27 @@
 name: Grab Scratch thumbnail
 
 on:
+  schedule:
+    - cron: "*/15 * * * *"   # check every 15 minutes
   workflow_dispatch:
     inputs:
       project:
-        description: Scratch project ID or URL
-        required: true
+        description: Scratch project ID or URL (leave blank for the watched project)
+        required: false
       commit:
         description: Commit the thumbnail into the repo
         type: boolean
-        default: false
+        default: true
+
+env:
+  WATCHED_PROJECT: "1381537995"
 
 permissions:
   contents: write
+
+concurrency:
+  group: scratch-thumbnail
+  cancel-in-progress: false
 
 jobs:
   thumbnail:
@@ -23,19 +32,17 @@ jobs:
       - id: thumb
         uses: ./.github/actions/scratch-thumbnail
         with:
-          project: ${{ inputs.project }}
-          # output: images/{id}.png   # optional, default is thumbnails/{id}.png
-          # width: "480"
-          # height: "360"
+          project: ${{ inputs.project || env.WATCHED_PROJECT }}
 
       - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
         with:
           name: scratch-thumbnail-${{ steps.thumb.outputs.project-id }}
           path: ${{ steps.thumb.outputs.path }}
           if-no-files-found: error
 
-      - name: Commit thumbnail
-        if: inputs.commit
+      - name: Commit thumbnail if it changed
+        if: github.event_name == 'schedule' || inputs.commit
         env:
           THUMB: ${{ steps.thumb.outputs.path }}
           PROJECT_ID: ${{ steps.thumb.outputs.project-id }}
@@ -47,5 +54,6 @@ jobs:
             echo "Thumbnail unchanged, nothing to commit."
           else
             git commit -m "Update Scratch thumbnail for project $PROJECT_ID"
+            git pull --rebase --autostash
             git push
           fi
