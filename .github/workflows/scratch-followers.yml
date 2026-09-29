@@ -21,7 +21,7 @@ env:
   SCRATCH_USER: blockblock2
   GITHUB_USER: blockblock2
   SHOW_GITHUB: "false"   # change to "true" to bring back the GitHub followers badge
-  NEWEST_COUNT: "10"     # how many of your newest followers to show in the README
+  MILESTONE_EVERY: "10"  # show your 10th, 20th, 30th... follower
   BADGE_HEIGHT: "48"     # normal badge size is 28; bigger number = bigger badge
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
 
           scratch_user = os.environ["SCRATCH_USER"]
           github_user = os.environ["GITHUB_USER"]
-          newest_count = int(os.environ.get("NEWEST_COUNT", "10"))
+          every = int(os.environ.get("MILESTONE_EVERY", "10"))
           badge_height = int(os.environ.get("BADGE_HEIGHT", "48"))
           UA = {"User-Agent": "Mozilla/5.0 (github-actions follower-counts)"}
 
@@ -139,11 +139,16 @@ jobs:
                       return text[:a.end()] + "\n\n" + block + text[a.end():]
               return text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
 
+          def ordinal(n):
+              suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+              return f"{n:,}{suffix}"
+
           def grid(people, per_row):
               rows = []
               for i in range(0, len(people), per_row):
                   cells = "".join(
-                      f'<td align="center"><a href="https://scratch.mit.edu/users/{p["name"]}/">'
+                      f'<td align="center"><b>{ordinal(p["n"])}</b><br>'
+                      f'<a href="https://scratch.mit.edu/users/{p["name"]}/">'
                       f'<img src="{p["img"]}" width="60" height="60" alt="{p["name"]}"><br><sub>{p["name"]}</sub></a></td>'
                       for p in people[i:i + per_row]
                   )
@@ -180,22 +185,33 @@ jobs:
               if badges:
                   text = put_block(text, "scratch-followers", '<p align="center">\n' + "\n  &nbsp;\n".join(badges) + "\n</p>")
 
-              # --- Newest followers + Follower.md ---
+              # --- Milestone followers (10th, 20th, ...) in the README and Follower.md ---
+              # Remove the old "Newest followers" section from the earlier version.
+              text = markers("scratch-newest-followers")[2].sub("", text)
+              text = re.sub(r"\n{3,}", "\n\n", text)
               if followers:
-                  total = shown.get("Scratch", len(followers))
-                  newest = (
-                      '<p align="center"><b>Newest followers</b></p>\n'
-                      '<div align="center">\n\n' + grid(followers[:newest_count], 5) + "\n\n</div>\n"
-                      f'<p align="center"><a href="Follower.md">See all {total:,} followers →</a></p>'
-                  )
-                  text = put_block(text, "scratch-newest-followers", newest, after_kind="scratch-followers")
-                  pathlib.Path("Follower.md").write_text(
-                      f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
-                      f'<h1 align="center">{scratch_user}\'s Scratch followers ({total:,})</h1>\n\n'
-                      f'<p align="center">Newest first · <a href="README.md">← Back to profile</a></p>\n\n'
-                      '<div align="center">\n\n' + grid(followers, 6) + "\n\n</div>\n",
-                      encoding="utf-8",
-                  )
+                  oldest_first = list(reversed(followers))
+                  milestones = [
+                      {**oldest_first[k - 1], "n": k}
+                      for k in range(every, len(oldest_first) + 1, every)
+                  ]
+                  if milestones:
+                      table = '<div align="center">\n\n' + grid(milestones, 5) + "\n\n</div>"
+                      text = put_block(
+                          text, "scratch-follower-milestones",
+                          '<p align="center"><b>🏆 Follower milestones</b></p>\n' + table,
+                          after_kind="scratch-followers",
+                      )
+                      pathlib.Path("Follower.md").write_text(
+                          f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
+                          f'<h1 align="center">🏆 {scratch_user}\'s follower milestones</h1>\n\n'
+                          f'<p align="center">Every {every}th follower on Scratch, out of {len(followers):,} so far · '
+                          f'<a href="README.md">← Back to profile</a></p>\n\n' + table + "\n",
+                          encoding="utf-8",
+                      )
+                  else:
+                      text = markers("scratch-follower-milestones")[2].sub("", text)
+                      text = re.sub(r"\n{3,}", "\n\n", text)
 
               readme.write_text(text, encoding="utf-8")
               return ", ".join(f"{s} {n}" for s, n in shown.items())
