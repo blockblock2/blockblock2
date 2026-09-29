@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       commit:
-        description: "Commit the README change"
+        description: "Commit the changes"
         type: boolean
         default: true
 
@@ -21,23 +21,31 @@ env:
   SCRATCH_USER: blockblock2
   GITHUB_USER: blockblock2
   SHOW_GITHUB: "false"   # change to "true" to bring back the GitHub followers badge
+  NEWEST_COUNT: "10"     # how many of your newest followers to show in the README
+  BADGE_HEIGHT: "48"     # normal badge size is 28; bigger number = bigger badge
 
 jobs:
   followers:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Always start from the newest main, even on "Re-run jobs".
+          ref: ${{ github.event.repository.default_branch }}
 
-      - name: Get follower counts and update README
-        id: count
+      - name: Update README and Follower.md
         shell: python
         env:
           GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+          COMMIT: ${{ github.event_name == 'schedule' || inputs.commit }}
         run: |
-          import json, os, pathlib, re, time, urllib.request
+          import json, os, pathlib, re, subprocess, time, urllib.request
 
           scratch_user = os.environ["SCRATCH_USER"]
           github_user = os.environ["GITHUB_USER"]
+          newest_count = int(os.environ.get("NEWEST_COUNT", "10"))
+          badge_height = int(os.environ.get("BADGE_HEIGHT", "48"))
           UA = {"User-Agent": "Mozilla/5.0 (github-actions follower-counts)"}
 
           def get(url, headers=None, tries=3):
@@ -51,53 +59,32 @@ jobs:
                       time.sleep(5 * (i + 1))
               return None
 
-          # ---------- Scratch ----------
-          def scratch_from_page():
-              # The followers page title says "Followers (N)".
+          # ================= Get the data (once) =================
+
+          def scratch_page_count():
+              # The followers page heading says "Followers (N)".
               html = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/")
-              if not html:
-                  return None
-              m = re.search(r"Followers\s*\(([\d,]+)\)", html)
+              m = html and re.search(r"Followers\s*\(([\d,]+)\)", html)
               return int(m.group(1).replace(",", "")) if m else None
 
-          def scratch_from_api():
-              # Page through the API 40 at a time, jumping ahead then narrowing in.
-              def page(i):
-                  body = get(f"https://api.scratch.mit.edu/users/{scratch_user}/followers?limit=40&offset={i * 40}")
-                  if body is None:
-                      raise RuntimeError("API unreachable")
-                  return len(json.loads(body))
-              if page(0) == 0:
-                  return 0
-              lo, hi = 0, 1
+          def scratch_follower_list():
+              # Every follower from Scratch's API, newest first, 40 per page.
+              people, offset = [], 0
               while True:
-                  c = page(hi)
-                  if c == 0:
-                      break
-                  if c < 40:
-                      return hi * 40 + c
-                  lo, hi = hi, hi * 2
-              # Page lo has followers, page hi is empty; find the last non-empty page.
-              while hi - lo > 1:
-                  mid = (lo + hi) // 2
-                  if page(mid) > 0:
-                      lo = mid
-                  else:
-                      hi = mid
-              return lo * 40 + page(lo)
+                  body = get(f"https://api.scratch.mit.edu/users/{scratch_user}/followers?limit=40&offset={offset}")
+                  if body is None:
+                      return None
+                  page = json.loads(body)
+                  for p in page:
+                      imgs = (p.get("profile") or {}).get("images") or {}
+                      people.append({
+                          "name": p["username"],
+                          "img": imgs.get("60x60") or f"https://cdn2.scratch.mit.edu/get_image/user/{p['id']}_60x60.png",
+                      })
+                  if len(page) < 40:
+                      return people
+                  offset += 40
 
-          def scratch_count():
-              n = scratch_from_page()
-              if n is not None:
-                  return n
-              print("Scratch profile page didn't work, falling back to the API")
-              try:
-                  return scratch_from_api()
-              except Exception as e:
-                  print(f"Scratch API failed too: {e}")
-                  return None
-
-          # ---------- GitHub ----------
           def github_count():
               body = get(
                   f"https://api.github.com/users/{github_user}",
@@ -109,83 +96,142 @@ jobs:
                   print(f"Couldn't read GitHub followers: {e}")
                   return None
 
-          # ---------- README ----------
-          readme = pathlib.Path("README.md")
-          text = readme.read_text(encoding="utf-8") if readme.exists() else ""
-          start = f"<!-- scratch-followers:{scratch_user}:start -->"
-          end = f"<!-- scratch-followers:{scratch_user}:end -->"
-          pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
-          old = pattern.search(text)
-
-          def previous(site):
-              # If one site is down, keep the number that's already in the README.
-              if not old:
-                  return None
-              m = re.search(r'alt="([\d,]+) ' + site + r' follower', old.group(0))
-              return int(m.group(1).replace(",", "")) if m else None
-
-          counts = {"Scratch": scratch_count()}
+          followers = scratch_follower_list()
+          if followers is None:
+              print("::warning::Couldn't get the Scratch follower list, leaving the names alone.")
+          scratch = scratch_page_count()
+          if scratch is None and followers is not None:
+              print("Followers page didn't work, counting the list instead")
+              scratch = len(followers)
+          counts = {"Scratch": scratch}
           if os.environ.get("SHOW_GITHUB", "").lower() == "true":
               counts["GitHub"] = github_count()
-          for site, n in counts.items():
-              if n is None:
-                  counts[site] = previous(site)
-                  print(f"::warning::Couldn't get {site} followers, keeping the old number ({counts[site]}).")
-              else:
-                  print(f"{site}: {n} followers")
 
-          BADGE_HEIGHT = 48  # normal size is 28; change this to make the badges bigger or smaller
-          badges = []
-          styles = {
-              "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
-              "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
-          }
+          badge_sizes = {}
           def size_attrs(url):
               # GitHub ignores height on its own, so work out the matching width too.
-              svg = get(url)
-              m = svg and re.search(r'<svg[^>]*?\swidth="([\d.]+)"[^>]*?\sheight="([\d.]+)"', svg)
-              if not m:
-                  print(f"  Couldn't read badge size from {url}, using height only")
-                  return f'height="{BADGE_HEIGHT}"'
-              w, h = float(m.group(1)), float(m.group(2))
-              return f'width="{round(w * BADGE_HEIGHT / h)}" height="{BADGE_HEIGHT}"'
+              if url not in badge_sizes:
+                  svg = get(url)
+                  m = svg and re.search(r'<svg[^>]*?\swidth="([\d.]+)"[^>]*?\sheight="([\d.]+)"', svg)
+                  if m:
+                      w, h = float(m.group(1)), float(m.group(2))
+                      badge_sizes[url] = f'width="{round(w * badge_height / h)}" height="{badge_height}"'
+                  else:
+                      print(f"  Couldn't read badge size from {url}, using height only")
+                      badge_sizes[url] = f'height="{badge_height}"'
+              return badge_sizes[url]
 
-          for site, n in counts.items():
-              if n is None:
-                  continue
-              link, color, logo = styles[site]
-              label = "follower" if n == 1 else "followers"
-              src = f"https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white"
-              badges.append(
-                  f'  <a href="{link}"><img src="{src}" {size_attrs(src)} alt="{n:,} {site} {label}"></a>'
-              )
-          if not badges:
-              raise SystemExit("::error::Couldn't get either follower count, leaving README alone.")
+          # ================= Build the files =================
 
-          block = f'{start}\n<p align="center">\n' + "\n  &nbsp;\n".join(badges) + f"\n</p>\n{end}"
-          if old:
-              text = pattern.sub(lambda m: block, text)
+          def markers(kind):
+              start = f"<!-- {kind}:{scratch_user}:start -->"
+              end = f"<!-- {kind}:{scratch_user}:end -->"
+              return start, end, re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+
+          def put_block(text, kind, inner, after_kind=None):
+              start, end, pattern = markers(kind)
+              block = f"{start}\n{inner}\n{end}"
+              if pattern.search(text):
+                  return pattern.sub(lambda m: block, text)
+              if after_kind:
+                  a = markers(after_kind)[2].search(text)
+                  if a:
+                      return text[:a.end()] + "\n\n" + block + text[a.end():]
+              return text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
+
+          def grid(people, per_row):
+              rows = []
+              for i in range(0, len(people), per_row):
+                  cells = "".join(
+                      f'<td align="center"><a href="https://scratch.mit.edu/users/{p["name"]}/">'
+                      f'<img src="{p["img"]}" width="60" height="60" alt="{p["name"]}"><br><sub>{p["name"]}</sub></a></td>'
+                      for p in people[i:i + per_row]
+                  )
+                  rows.append(f"  <tr>{cells}</tr>")
+              return "<table>\n" + "\n".join(rows) + "\n</table>"
+
+          def build():
+              readme = pathlib.Path("README.md")
+              text = readme.read_text(encoding="utf-8") if readme.exists() else ""
+
+              # --- Badges ---
+              badge_block = markers("scratch-followers")[2].search(text)
+              def previous(site):
+                  # If a site is down, keep the number that's already in the README.
+                  m = badge_block and re.search(r'alt="([\d,]+) ' + site + r' follower', badge_block.group(0))
+                  return int(m.group(1).replace(",", "")) if m else None
+              shown = {}
+              for site, n in counts.items():
+                  if n is None:
+                      n = previous(site)
+                      print(f"::warning::Couldn't get {site} followers, keeping the old number ({n}).")
+                  if n is not None:
+                      shown[site] = n
+              styles = {
+                  "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
+                  "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
+              }
+              badges = []
+              for site, n in shown.items():
+                  link, color, logo = styles[site]
+                  label = "follower" if n == 1 else "followers"
+                  src = f"https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white"
+                  badges.append(f'  <a href="{link}"><img src="{src}" {size_attrs(src)} alt="{n:,} {site} {label}"></a>')
+              if badges:
+                  text = put_block(text, "scratch-followers", '<p align="center">\n' + "\n  &nbsp;\n".join(badges) + "\n</p>")
+
+              # --- Newest followers + Follower.md ---
+              if followers:
+                  total = shown.get("Scratch", len(followers))
+                  newest = (
+                      '<p align="center"><b>Newest followers</b></p>\n'
+                      '<div align="center">\n\n' + grid(followers[:newest_count], 5) + "\n\n</div>\n"
+                      f'<p align="center"><a href="Follower.md">See all {total:,} followers →</a></p>'
+                  )
+                  text = put_block(text, "scratch-newest-followers", newest, after_kind="scratch-followers")
+                  pathlib.Path("Follower.md").write_text(
+                      f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
+                      f'<h1 align="center">{scratch_user}\'s Scratch followers ({total:,})</h1>\n\n'
+                      f'<p align="center">Newest first · <a href="README.md">← Back to profile</a></p>\n\n'
+                      '<div align="center">\n\n' + grid(followers, 6) + "\n\n</div>\n",
+                      encoding="utf-8",
+                  )
+
+              readme.write_text(text, encoding="utf-8")
+              return ", ".join(f"{s} {n}" for s, n in shown.items())
+
+          # ================= Save and push =================
+
+          def git(*args, check=True):
+              return subprocess.run(["git", *args], check=check)
+
+          if os.environ.get("COMMIT", "").lower() != "true":
+              build()
+              print("Not committing (turned off for this run).")
+              raise SystemExit(0)
+
+          if all(n is None for n in counts.values()) and followers is None:
+              raise SystemExit("::error::Couldn't reach Scratch at all, leaving everything alone.")
+
+          git("config", "user.name", "github-actions[bot]")
+          git("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+          branch = os.environ["BRANCH"]
+          for attempt in range(1, 6):
+              # Start from whatever is on GitHub right now, so there's nothing to merge.
+              git("fetch", "origin", branch)
+              git("reset", "--hard", f"origin/{branch}")
+              summary = build()
+              git("add", "README.md")
+              if pathlib.Path("Follower.md").exists():
+                  git("add", "Follower.md")
+              if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
+                  print("Nothing changed, nothing to commit.")
+                  break
+              git("commit", "-m", f"Update followers ({summary})")
+              if git("push", "origin", f"HEAD:{branch}", check=False).returncode == 0:
+                  print("Pushed.")
+                  break
+              print(f"Push didn't go through (something else changed the repo), redoing it. Try {attempt}/5")
+              time.sleep(3 * attempt)
           else:
-              text = text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
-          readme.write_text(text, encoding="utf-8")
-          print(block)
-
-          summary = ", ".join(f"{s} {n}" for s, n in counts.items() if n is not None)
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"summary={summary}\n")
-
-      - name: Commit if a count changed
-        if: github.event_name == 'schedule' || inputs.commit
-        env:
-          SUMMARY: ${{ steps.count.outputs.summary }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          if git diff --cached --quiet; then
-            echo "Follower counts unchanged, nothing to commit."
-          else
-            git commit -m "Update follower counts ($SUMMARY)"
-            git pull --rebase --autostash
-            git push
-          fi
+              raise SystemExit("::error::Couldn't push after 5 tries.")
