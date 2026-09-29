@@ -61,7 +61,10 @@ jobs:
           end = f"<!-- scratch-thumbnail:{pid}:end -->"
           block = (
               f"{start}\n"
-              f"[![Scratch project {pid}]({thumb}?v={v})](https://scratch.mit.edu/projects/{pid}/)\n"
+              f'<p align="center">\n'
+              f'  <a href="https://scratch.mit.edu/projects/{pid}/">'
+              f'<img src="{thumb}?v={v}" alt="Scratch project {pid}" width="480"></a>\n'
+              f'</p>\n'
               f"{end}"
           )
 
