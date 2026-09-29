@@ -20,12 +20,13 @@ concurrency:
 env:
   SCRATCH_USER: blockblock2
   GITHUB_USER: blockblock2
+  SHOW_GITHUB: "false"   # change to "true" to bring back the GitHub followers badge
 
 jobs:
   followers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Get follower counts and update README
         id: count
@@ -35,6 +36,159 @@ jobs:
         run: |
           import json, os, pathlib, re, time, urllib.request
 
+          scratch_user = os.environ["SCRATCH_USER"]
+          github_user = os.environ["GITHUB_USER"]
+          UA = {"User-Agent": "Mozilla/5.0 (github-actions follower-counts)"}
+
+          def get(url, headers=None, tries=3):
+              for i in range(tries):
+                  try:
+                      req = urllib.request.Request(url, headers={**UA, **(headers or {})})
+                      with urllib.request.urlopen(req, timeout=20) as r:
+                          return r.read().decode("utf-8", "replace")
+                  except Exception as e:
+                      print(f"  {url} failed ({e}), try {i + 1}/{tries}")
+                      time.sleep(5 * (i + 1))
+              return None
+
+          # ---------- Scratch ----------
+          def scratch_from_page():
+              # The followers page title says "Followers (N)".
+              html = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/")
+              if not html:
+                  return None
+              m = re.search(r"Followers\s*\(([\d,]+)\)", html)
+              return int(m.group(1).replace(",", "")) if m else None
+
+          def scratch_from_api():
+              # Page through the API 40 at a time, jumping ahead then narrowing in.
+              def page(i):
+                  body = get(f"https://api.scratch.mit.edu/users/{scratch_user}/followers?limit=40&offset={i * 40}")
+                  if body is None:
+                      raise RuntimeError("API unreachable")
+                  return len(json.loads(body))
+              if page(0) == 0:
+                  return 0
+              lo, hi = 0, 1
+              while True:
+                  c = page(hi)
+                  if c == 0:
+                      break
+                  if c < 40:
+                      return hi * 40 + c
+                  lo, hi = hi, hi * 2
+              # Page lo has followers, page hi is empty; find the last non-empty page.
+              while hi - lo > 1:
+                  mid = (lo + hi) // 2
+                  if page(mid) > 0:
+                      lo = mid
+                  else:
+                      hi = mid
+              return lo * 40 + page(lo)
+
+          def scratch_count():
+              n = scratch_from_page()
+              if n is not None:
+                  return n
+              print("Scratch profile page didn't work, falling back to the API")
+              try:
+                  return scratch_from_api()
+              except Exception as e:
+                  print(f"Scratch API failed too: {e}")
+                  return None
+
+          # ---------- GitHub ----------
+          def github_count():
+              body = get(
+                  f"https://api.github.com/users/{github_user}",
+                  {"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"},
+              )
+              try:
+                  return int(json.loads(body)["followers"]) if body else None
+              except Exception as e:
+                  print(f"Couldn't read GitHub followers: {e}")
+                  return None
+
+          # ---------- README ----------
+          readme = pathlib.Path("README.md")
+          text = readme.read_text(encoding="utf-8") if readme.exists() else ""
+          start = f"<!-- scratch-followers:{scratch_user}:start -->"
+          end = f"<!-- scratch-followers:{scratch_user}:end -->"
+          pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+          old = pattern.search(text)
+
+          def previous(site):
+              # If one site is down, keep the number that's already in the README.
+              if not old:
+                  return None
+              m = re.search(r'alt="([\d,]+) ' + site + r' follower', old.group(0))
+              return int(m.group(1).replace(",", "")) if m else None
+
+          counts = {"Scratch": scratch_count()}
+          if os.environ.get("SHOW_GITHUB", "").lower() == "true":
+              counts["GitHub"] = github_count()
+          for site, n in counts.items():
+              if n is None:
+                  counts[site] = previous(site)
+                  print(f"::warning::Couldn't get {site} followers, keeping the old number ({counts[site]}).")
+              else:
+                  print(f"{site}: {n} followers")
+
+          BADGE_HEIGHT = 48  # normal size is 28; change this to make the badges bigger or smaller
+          badges = []
+          styles = {
+              "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
+              "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
+          }
+          def size_attrs(url):
+              # GitHub ignores height on its own, so work out the matching width too.
+              svg = get(url)
+              m = svg and re.search(r'<svg[^>]*?\swidth="([\d.]+)"[^>]*?\sheight="([\d.]+)"', svg)
+              if not m:
+                  print(f"  Couldn't read badge size from {url}, using height only")
+                  return f'height="{BADGE_HEIGHT}"'
+              w, h = float(m.group(1)), float(m.group(2))
+              return f'width="{round(w * BADGE_HEIGHT / h)}" height="{BADGE_HEIGHT}"'
+
+          for site, n in counts.items():
+              if n is None:
+                  continue
+              link, color, logo = styles[site]
+              label = "follower" if n == 1 else "followers"
+              src = f"https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white"
+              badges.append(
+                  f'  <a href="{link}"><img src="{src}" {size_attrs(src)} alt="{n:,} {site} {label}"></a>'
+              )
+          if not badges:
+              raise SystemExit("::error::Couldn't get either follower count, leaving README alone.")
+
+          block = f'{start}\n<p align="center">\n' + "\n  &nbsp;\n".join(badges) + f"\n</p>\n{end}"
+          if old:
+              text = pattern.sub(lambda m: block, text)
+          else:
+              text = text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
+          readme.write_text(text, encoding="utf-8")
+          print(block)
+
+          summary = ", ".join(f"{s} {n}" for s, n in counts.items() if n is not None)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"summary={summary}\n")
+
+      - name: Commit if a count changed
+        if: github.event_name == 'schedule' || inputs.commit
+        env:
+          SUMMARY: ${{ steps.count.outputs.summary }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "Follower counts unchanged, nothing to commit."
+          else
+            git commit -m "Update follower counts ($SUMMARY)"
+            git pull --rebase --autostash
+            git push
+          fi
           scratch_user = os.environ["SCRATCH_USER"]
           github_user = os.environ["GITHUB_USER"]
           UA = {"User-Agent": "Mozilla/5.0 (github-actions follower-counts)"}
