@@ -6,5 +6,6 @@
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 <p align="center">Follow for SCRATCH CAT accessory</p>
 <!-- scratch-thumbnail:1381537995:start -->
+[![Scratch project 1381537995](thumbnails/1381537995.png?v=5524ac76)](https://scratch.mit.edu/projects/1381537995/)
 <!-- scratch-thumbnail:1381537995:end -->
 
