@@ -25,7 +25,7 @@
 <p align="center">Follow for SCRATCH CAT accessory</p>
 <!-- scratch-thumbnail:1381537995:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/projects/1381537995/"><img src="thumbnails/1381537995.png?v=5524ac76" alt="Scratch project 1381537995" width="480"></a>
+  <a href="https://scratch.mit.edu/projects/1381537995/"><img src="thumbnails/1381537995.png?v=9ec5554d" alt="Scratch project 1381537995" width="480"></a>
 </p>
 <!-- scratch-thumbnail:1381537995:end -->
 
