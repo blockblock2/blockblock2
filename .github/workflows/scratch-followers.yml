@@ -67,6 +67,30 @@ jobs:
               m = html and re.search(r"Followers\s*\(([\d,]+)\)", html)
               return int(m.group(1).replace(",", "")) if m else None
 
+          def scratch_list_from_pages(expected):
+              # Read the same followers pages you see on Scratch (newest first, 60 per page).
+              people, page_no = [], 1
+              while True:
+                  html = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/?page={page_no}",
+                             tries=3 if page_no == 1 else 2)
+                  if not html:
+                      break
+                  found = 0
+                  for item in re.findall(r'<li[^>]*class="[^"]*\buser\b[^"]*\bthumb\b[^"]*"[^>]*>(.*?)</li>', html, re.S):
+                      name = re.search(r'href="/users/([\w-]+)/"', item)
+                      if not name or any(x["name"] == name.group(1) for x in people):
+                          continue
+                      img = re.search(r'(?:data-original|src)="((?:https?:)?//[^"]+)"', item)
+                      src = img.group(1) if img else ""
+                      if src.startswith("//"):
+                          src = "https:" + src
+                      people.append({"name": name.group(1), "img": src or f"https://cdn2.scratch.mit.edu/get_image/user/0_60x60.png"})
+                      found += 1
+                  if found == 0 or (expected and len(people) >= expected):
+                      break
+                  page_no += 1
+              return people or None
+
           def scratch_follower_list():
               # Every follower from Scratch's API, newest first, 40 per page.
               people, offset = [], 0
@@ -99,15 +123,21 @@ jobs:
                   print(f"Couldn't read GitHub followers: {e}")
                   return None
 
-          followers = scratch_follower_list()
+          scratch = scratch_page_count()
+          followers = scratch_list_from_pages(scratch)
+          if followers is not None:
+              print(f"Followers page says {scratch}, read {len(followers)} names from the followers pages")
+          else:
+              print("::warning::Couldn't read names from the followers pages, trying Scratch's API instead.")
+              followers = scratch_follower_list()
+              if followers is not None:
+                  print(f"Followers page says {scratch}, Scratch's API list has {len(followers)} people")
           if followers is None:
               print("::warning::Couldn't get the Scratch follower list, leaving the names alone.")
-          scratch = scratch_page_count()
-          if scratch is None and followers is not None:
-              print("Followers page didn't work, counting the list instead")
+          elif scratch is None:
               scratch = len(followers)
-          if followers is not None:
-              print(f"Followers page says {scratch}, Scratch's API list has {len(followers)} people")
+          if followers:
+              print("Newest 3: " + ", ".join(p["name"] for p in followers[:3]))
           counts = {"Scratch": scratch}
           if os.environ.get("SHOW_GITHUB", "").lower() == "true":
               counts["GitHub"] = github_count()
