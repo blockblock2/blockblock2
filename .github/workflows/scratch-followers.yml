@@ -182,7 +182,7 @@ jobs:
               rows = []
               for i in range(0, len(people), per_row):
                   cells = "".join(
-                      f'<td align="center"><b>{ordinal(p["n"])}</b><br>'
+                      f'<td align="center"><b>{"🏆 " if p.get("trophy") else ""}{ordinal(p["n"])}</b><br>'
                       f'<a href="https://scratch.mit.edu/users/{p["name"]}/">'
                       f'<img src="{p["img"]}" width="60" height="60" alt="{p["name"]}"><br><sub>{p["name"]}</sub></a></td>'
                       for p in people[i:i + per_row]
@@ -225,29 +225,34 @@ jobs:
               text = markers("scratch-newest-followers")[2].sub("", text)
               text = re.sub(r"\n{3,}", "\n\n", text)
               if followers:
-                  oldest_first = list(reversed(followers))
-                  milestones = [
-                      {**oldest_first[k - 1], "n": k}
-                      # Never go past the real count from the followers page.
-                      for k in range(every, min(len(oldest_first), shown.get("Scratch", len(oldest_first))) + 1, every)
-                  ]
+                  # Number everyone by when they followed: oldest = 1st.
+                  total = min(len(followers), shown.get("Scratch", len(followers)))
+                  oldest_first = [{**p, "n": i + 1} for i, p in enumerate(reversed(followers))][:total]
+                  milestones = [p for p in oldest_first if p["n"] % every == 0]
+                  repo = os.environ.get("GITHUB_REPOSITORY", f"{github_user}/{github_user}")
+                  all_link = f"https://github.com/{repo}/blob/{os.environ.get('BRANCH', 'main')}/Follower.md"
+                  view_all = f'<p align="center"><a href="{all_link}">View all followers here →</a></p>'
                   if milestones:
-                      table = '<div align="center">\n\n' + grid(milestones, 5) + "\n\n</div>"
                       text = put_block(
                           text, "scratch-follower-milestones",
-                          '<p align="center"><b>🏆 Follower milestones</b></p>\n' + table,
+                          '<p align="center"><b>🏆 Follower milestones</b></p>\n'
+                          '<div align="center">\n\n' + grid(milestones, 5) + "\n\n</div>\n" + view_all,
                           after_kind="scratch-followers",
                       )
-                      pathlib.Path("Follower.md").write_text(
-                          f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
-                          f'<h1 align="center">🏆 {scratch_user}\'s follower milestones</h1>\n\n'
-                          f'<p align="center">Every {every}th follower on Scratch, out of {len(followers):,} so far · '
-                          f'<a href="README.md">← Back to profile</a></p>\n\n' + table + "\n",
-                          encoding="utf-8",
-                      )
                   else:
-                      text = markers("scratch-follower-milestones")[2].sub("", text)
-                      text = re.sub(r"\n{3,}", "\n\n", text)
+                      text = put_block(text, "scratch-follower-milestones", view_all, after_kind="scratch-followers")
+                  # Follower.md: everyone, newest first, with milestone followers marked with a 🏆.
+                  everyone = list(reversed(oldest_first))
+                  def mark(p):
+                      return {**p, "trophy": p["n"] % every == 0}
+                  pathlib.Path("Follower.md").write_text(
+                      f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
+                      f'<h1 align="center">{scratch_user}\'s Scratch followers ({total:,})</h1>\n\n'
+                      f'<p align="center">Newest first · 🏆 = every {every}th follower · '
+                      f'<a href="https://github.com/{github_user}">← Back to profile</a></p>\n\n'
+                      '<div align="center">\n\n' + grid([mark(p) for p in everyone], 6) + "\n\n</div>\n",
+                      encoding="utf-8",
+                  )
 
               readme.write_text(text, encoding="utf-8")
               return ", ".join(f"{s} {n}" for s, n in shown.items())
