@@ -28,4 +28,3 @@
 <p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md">View all followers here →</a></p>
 <!-- scratch-follower-milestones:blockblock2:end -->
 
-
