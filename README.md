@@ -28,10 +28,4 @@
 <p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md">View all followers here →</a></p>
 <!-- scratch-follower-milestones:blockblock2:end -->
 
-<p align="center">Every 10 follows I add something</p>
-<!-- scratch-thumbnail:1381537995:start -->
-<p align="center">
-  <a href="https://scratch.mit.edu/projects/1381537995/"><img src="thumbnails/1381537995.png?v=9ec5554d" alt="Scratch project 1381537995" width="480"></a>
-</p>
-<!-- scratch-thumbnail:1381537995:end -->
 
