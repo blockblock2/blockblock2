@@ -11,7 +11,7 @@
 <!-- SCRATCHAVERSARY:END -->
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="https://img.shields.io/badge/Scratch-81%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" width="382" height="48" alt="81 Scratch followers"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="https://img.shields.io/badge/Scratch-82%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" width="382" height="48" alt="82 Scratch followers"></a>
 </p>
 <!-- scratch-followers:blockblock2:end -->
 
