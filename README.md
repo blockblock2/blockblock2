@@ -10,6 +10,11 @@
 `█████░░░░░░░░░░░░░░░` 27%  
 <sub>Scratcher since July 2, 2024</sub>
 <!-- SCRATCHAVERSARY:END -->
+<!-- SCRATCH-SCORE:START -->
+<p align="center">
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=1ebf1678" width="100%" alt="Scratch score: 72 out of 100"></a>
+</p>
+<!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
   <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=6bac9f6f" width="100%" alt="82 Scratch followers"></a>
