@@ -19,7 +19,7 @@
 
 <!-- SCRATCH-SCORE:START -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=bf752d3c" width="100%" alt="Scratch score: 99 out of 100"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=1ebf1678" width="100%" alt="Scratch score: 72 out of 100"></a>
 </p>
 <!-- SCRATCH-SCORE:END -->
 

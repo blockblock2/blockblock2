@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="860" height="536" viewBox="0 0 860 536" role="img" aria-label="Scratch score 99 out of 100">
-<title>blockblock2: Scratch score 99/100</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="536" viewBox="0 0 860 536" role="img" aria-label="Scratch score 72 out of 100">
+<title>blockblock2: Scratch score 72/100</title>
 <defs>
   <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff2bd6"/><stop offset=".5" stop-color="#7b5cff"/><stop offset="1" stop-color="#19e3ff"/></linearGradient>
   <linearGradient id="xp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#19e3ff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
@@ -26,60 +26,60 @@
 <path d="M40 24h60M760 512h60" stroke="url(#neon)" stroke-width="3" stroke-linecap="round"/>
 
 <text x="40" y="62" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" font-weight="700" letter-spacing="4" fill="#8f93c9">SCRATCH SCORE</text>
-<text class="count" x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#19e3ff" opacity=".9" filter="url(#glow)">99</text>
-<text x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#ffffff">99<tspan font-size="30" fill="#5d6094" font-weight="700">/100</tspan></text>
+<text class="count" x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#19e3ff" opacity=".9" filter="url(#glow)">72</text>
+<text x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#ffffff">72<tspan font-size="30" fill="#5d6094" font-weight="700">/100</tspan></text>
 <text x="40" y="186" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" fill="#19e3ff">@blockblock2</text>
 
 <rect x="630" y="40" width="190" height="128" rx="14" fill="#120f24" stroke="#ff2bd6" stroke-opacity=".55" stroke-width="2"/>
 <text x="725" y="72" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" letter-spacing="5" fill="#ff7be6">RANK</text>
-<text x="725" y="128" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="26" font-weight="800" fill="#ff2bd6" filter="url(#softglow)">LEGENDARY</text>
-<text x="725" y="160" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" letter-spacing="1" fill="#8f93c9">4/5 STATS MAXED</text>
+<text x="725" y="128" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="26" font-weight="800" fill="#ff2bd6" filter="url(#softglow)">RISING</text>
+<text x="725" y="160" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" letter-spacing="1" fill="#8f93c9">0/5 STATS MAXED</text>
 
 <rect x="40" y="206" width="780" height="14" rx="7" fill="#1b1830" stroke="#2c2850"/>
 <g clip-path="url(#bar)">
-  <rect x="40" y="206" width="772.2" height="14" fill="url(#xp)" filter="url(#softglow)"/>
+  <rect x="40" y="206" width="561.6" height="14" fill="url(#xp)" filter="url(#softglow)"/>
   <rect class="shine" x="40" y="206" width="120" height="14" fill="url(#shine)" opacity=".7"/>
 </g>
-<text x="40" y="246" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" fill="#d9dcff">SCORE 99/100</text>
-<text x="820" y="246" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" fill="#8f93c9">1 MORE TO <tspan fill="#ffc531" font-weight="700">100</tspan></text>
+<text x="40" y="246" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" fill="#d9dcff">SCORE 72/100</text>
+<text x="820" y="246" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" fill="#8f93c9">28 MORE TO <tspan fill="#ffc531" font-weight="700">100</tspan></text>
 
 <text x="40" y="286" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" font-weight="700" letter-spacing="4" fill="#ffc531">★ STATS</text>
 <text x="820" y="286" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">20 POINTS EACH · 5 STATS</text>
 
-  <rect x="40" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#ffc531" stroke-opacity=".8" stroke-width="2" filter="url(#softglow)"/>
+  <rect x="40" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="56" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">STARS</text>
   <text x="56" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#ffc531" filter="url(#softglow)">185</text>
   <rect x="56" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="56" y="396" width="112.8" height="8" rx="4" fill="#ffc531"/>
-  <text x="56" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">20.0<tspan fill="#5d6094">/20</tspan></text>
-  <rect x="122.80000000000001" y="415" width="46" height="20" rx="10" fill="#ffc531"/><text x="145.8" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="800" fill="#1a1300">MAX</text>
-  <rect x="198.8" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#ffc531" stroke-opacity=".8" stroke-width="2" filter="url(#softglow)"/>
+  <rect x="56" y="396" width="104.3" height="8" rx="4" fill="#ffc531"/>
+  <text x="56" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">18.5<tspan fill="#5d6094">/20</tspan></text>
+  
+  <rect x="198.8" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="214.8" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">HEARTS</text>
   <text x="214.8" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#ff2bd6" filter="url(#softglow)">176</text>
   <rect x="214.8" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="214.8" y="396" width="112.8" height="8" rx="4" fill="#ff2bd6"/>
-  <text x="214.8" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">20.0<tspan fill="#5d6094">/20</tspan></text>
-  <rect x="281.6" y="415" width="46" height="20" rx="10" fill="#ffc531"/><text x="304.6" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="800" fill="#1a1300">MAX</text>
-  <rect x="357.6" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#ffc531" stroke-opacity=".8" stroke-width="2" filter="url(#softglow)"/>
+  <rect x="214.8" y="396" width="99.3" height="8" rx="4" fill="#ff2bd6"/>
+  <text x="214.8" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">17.6<tspan fill="#5d6094">/20</tspan></text>
+  
+  <rect x="357.6" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="373.6" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">REMIXES</text>
   <text x="373.6" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#3dffa2" filter="url(#softglow)">42</text>
   <rect x="373.6" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="373.6" y="396" width="112.8" height="8" rx="4" fill="#3dffa2"/>
-  <text x="373.6" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">20.0<tspan fill="#5d6094">/20</tspan></text>
-  <rect x="440.40000000000003" y="415" width="46" height="20" rx="10" fill="#ffc531"/><text x="463.40000000000003" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="800" fill="#1a1300">MAX</text>
-  <rect x="516.4000000000001" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#ffc531" stroke-opacity=".8" stroke-width="2" filter="url(#softglow)"/>
+  <rect x="373.6" y="396" width="94.8" height="8" rx="4" fill="#3dffa2"/>
+  <text x="373.6" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">16.8<tspan fill="#5d6094">/20</tspan></text>
+  
+  <rect x="516.4000000000001" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="532.4000000000001" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">INVITES</text>
   <text x="532.4000000000001" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#19e3ff" filter="url(#softglow)">26</text>
   <rect x="532.4000000000001" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="532.4000000000001" y="396" width="112.8" height="8" rx="4" fill="#19e3ff"/>
-  <text x="532.4000000000001" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">20.0<tspan fill="#5d6094">/20</tspan></text>
-  <rect x="599.2" y="415" width="46" height="20" rx="10" fill="#ffc531"/><text x="622.2" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="800" fill="#1a1300">MAX</text>
+  <rect x="532.4000000000001" y="396" width="58.7" height="8" rx="4" fill="#19e3ff"/>
+  <text x="532.4000000000001" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">10.4<tspan fill="#5d6094">/20</tspan></text>
+  
   <rect x="675.2" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="691.2" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">FOLLOWERS</text>
   <text x="691.2" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#a98bff" filter="url(#softglow)">84</text>
   <rect x="691.2" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="691.2" y="396" width="108.6" height="8" rx="4" fill="#a98bff"/>
-  <text x="691.2" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">19.3<tspan fill="#5d6094">/20</tspan></text>
+  <rect x="691.2" y="396" width="47.4" height="8" rx="4" fill="#a98bff"/>
+  <text x="691.2" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">8.4<tspan fill="#5d6094">/20</tspan></text>
   
 
 <text x="40" y="502" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">BEST STAT <tspan fill="#19e3ff" font-weight="700">▸ STARS</tspan></text>
