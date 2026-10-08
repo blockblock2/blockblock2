@@ -20,15 +20,14 @@ concurrency:
 env:
   SCRATCH_USER: blockblock2
   GITHUB_USER: blockblock2
-  SHOW_GITHUB: "false"   # change to "true" to bring back the GitHub followers badge
+  SHOW_GITHUB: "false"   # change to "true" to also show your GitHub followers on the card
   MILESTONE_EVERY: "10"  # show your 10th, 20th, 30th... follower
-  BADGE_HEIGHT: "48"     # normal badge size is 28; bigger number = bigger badge
 
 jobs:
   followers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           # Always start from the newest main, even on "Re-run jobs".
           ref: ${{ github.event.repository.default_branch }}
@@ -40,43 +39,47 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
           COMMIT: ${{ github.event_name == 'schedule' || inputs.commit }}
         run: |
-          import json, os, pathlib, re, subprocess, time, urllib.request
+          import base64, hashlib, html, json, os, pathlib, re, subprocess, time, urllib.request
 
           scratch_user = os.environ["SCRATCH_USER"]
           github_user = os.environ["GITHUB_USER"]
           every = int(os.environ.get("MILESTONE_EVERY", "10"))
-          badge_height = int(os.environ.get("BADGE_HEIGHT", "48"))
           UA = {"User-Agent": "Mozilla/5.0 (github-actions follower-counts)"}
+          CARD = "followers-card.svg"
 
-          def get(url, headers=None, tries=3):
+          def fetch(url, headers=None, tries=3):
               for i in range(tries):
                   try:
                       req = urllib.request.Request(url, headers={**UA, **(headers or {})})
                       with urllib.request.urlopen(req, timeout=20) as r:
-                          return r.read().decode("utf-8", "replace")
+                          return r.read()
                   except Exception as e:
                       print(f"  {url} failed ({e}), try {i + 1}/{tries}")
                       time.sleep(5 * (i + 1))
               return None
 
+          def get(url, headers=None, tries=3):
+              body = fetch(url, headers, tries)
+              return body.decode("utf-8", "replace") if body is not None else None
+
           # ================= Get the data (once) =================
 
           def scratch_page_count():
               # The followers page heading says "Followers (N)".
-              html = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/")
-              m = html and re.search(r"Followers\s*\(([\d,]+)\)", html)
+              page = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/")
+              m = page and re.search(r"Followers\s*\(([\d,]+)\)", page)
               return int(m.group(1).replace(",", "")) if m else None
 
           def scratch_list_from_pages(expected):
               # Read the same followers pages you see on Scratch (newest first, 60 per page).
               people, page_no = [], 1
               while True:
-                  html = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/?page={page_no}",
+                  page = get(f"https://scratch.mit.edu/users/{scratch_user}/followers/?page={page_no}",
                              tries=3 if page_no == 1 else 2)
-                  if not html:
+                  if not page:
                       break
                   found = 0
-                  for item in re.findall(r'<li[^>]*class="[^"]*\buser\b[^"]*\bthumb\b[^"]*"[^>]*>(.*?)</li>', html, re.S):
+                  for item in re.findall(r'<li[^>]*class="[^"]*\buser\b[^"]*\bthumb\b[^"]*"[^>]*>(.*?)</li>', page, re.S):
                       name = re.search(r'href="/users/([\w-]+)/"', item)
                       if not name or any(x["name"] == name.group(1) for x in people):
                           continue
@@ -84,15 +87,15 @@ jobs:
                       src = img.group(1) if img else ""
                       if src.startswith("//"):
                           src = "https:" + src
-                      people.append({"name": name.group(1), "img": src or f"https://cdn2.scratch.mit.edu/get_image/user/0_60x60.png"})
+                      people.append({"name": name.group(1), "img": src})
                       found += 1
                   if found == 0 or (expected and len(people) >= expected):
                       break
                   page_no += 1
               return people or None
 
-          def scratch_follower_list():
-              # Every follower from Scratch's API, newest first, 40 per page.
+          def scratch_list_from_api():
+              # Backup: every follower from Scratch's API, newest first, 40 per page.
               people, offset = [], 0
               while True:
                   body = get(f"https://api.scratch.mit.edu/users/{scratch_user}/followers?limit=40&offset={offset}")
@@ -101,7 +104,6 @@ jobs:
                   page = json.loads(body)
                   for p in page:
                       if any(x["name"] == p["username"] for x in people):
-                          print(f"  {p['username']} showed up twice in Scratch's list, skipping the repeat")
                           continue
                       imgs = (p.get("profile") or {}).get("images") or {}
                       people.append({
@@ -129,7 +131,7 @@ jobs:
               print(f"Followers page says {scratch}, read {len(followers)} names from the followers pages")
           else:
               print("::warning::Couldn't read names from the followers pages, trying Scratch's API instead.")
-              followers = scratch_follower_list()
+              followers = scratch_list_from_api()
               if followers is not None:
                   print(f"Followers page says {scratch}, Scratch's API list has {len(followers)} people")
           if followers is None:
@@ -142,41 +144,176 @@ jobs:
           if os.environ.get("SHOW_GITHUB", "").lower() == "true":
               counts["GitHub"] = github_count()
 
-          badge_sizes = {}
-          def size_attrs(url):
-              # GitHub ignores height on its own, so work out the matching width too.
-              if url not in badge_sizes:
-                  svg = get(url)
-                  m = svg and re.search(r'<svg[^>]*?\swidth="([\d.]+)"[^>]*?\sheight="([\d.]+)"', svg)
-                  if m:
-                      w, h = float(m.group(1)), float(m.group(2))
-                      badge_sizes[url] = f'width="{round(w * badge_height / h)}" height="{badge_height}"'
-                  else:
-                      print(f"  Couldn't read badge size from {url}, using height only")
-                      badge_sizes[url] = f'height="{badge_height}"'
-              return badge_sizes[url]
-
-          # ================= Build the files =================
-
-          def markers(kind):
-              start = f"<!-- {kind}:{scratch_user}:start -->"
-              end = f"<!-- {kind}:{scratch_user}:end -->"
-              return start, end, re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
-
-          def put_block(text, kind, inner, after_kind=None):
-              start, end, pattern = markers(kind)
-              block = f"{start}\n{inner}\n{end}"
-              if pattern.search(text):
-                  return pattern.sub(lambda m: block, text)
-              if after_kind:
-                  a = markers(after_kind)[2].search(text)
-                  if a:
-                      return text[:a.end()] + "\n\n" + block + text[a.end():]
-              return text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
+          # ================= The card =================
 
           def ordinal(n):
               suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
               return f"{n:,}{suffix}"
+
+          avatar_cache = {}
+          def avatar(url):
+              # Pictures inside a README card have to be baked in, GitHub won't load them from Scratch.
+              if url in avatar_cache:
+                  return avatar_cache[url]
+              data = None
+              if url:
+                  data = fetch(re.sub(r"_\d+x\d+\.", "_90x90.", url), tries=2) or fetch(url, tries=2)
+              kind = None
+              if data:
+                  if data[:8] == b"\x89PNG\r\n\x1a\n": kind = "png"
+                  elif data[:4] == b"GIF8": kind = "gif"
+                  elif data[:2] == b"\xff\xd8": kind = "jpeg"
+                  elif data[:4] == b"RIFF" and data[8:12] == b"WEBP": kind = "webp"
+                  elif b"<svg" in data[:500]: kind = "svg+xml"
+              avatar_cache[url] = f"data:image/{kind};base64,{base64.b64encode(data).decode()}" if kind else None
+              return avatar_cache[url]
+
+          def short(name, n=12):
+              return name if len(name) <= n else name[: n - 1] + "…"
+
+          def make_card(count, milestones, newest, github=None):
+              e = html.escape
+              W, PAD = 860, 40
+              inner = W - 2 * PAD
+              per_row = 7
+              cell = inner / per_row
+              level = count // every
+              into = count % every
+              nxt = (level + 1) * every
+              slots = [dict(p, locked=False) for p in milestones] + [{"n": nxt, "locked": True}]
+              rows = (len(slots) + per_row - 1) // per_row
+              grid_top = 290
+              H = grid_top + rows * 150 + 86
+              mono = "ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace"
+              sans = "-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif"
+              bar_w = inner
+              fill_w = max(14, bar_w * into / every) if into else 0
+
+              o = []
+              o.append(f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="{count:,} Scratch followers">
+          <title>{e(scratch_user)}: {count:,} Scratch followers</title>
+          <defs>
+            <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff2bd6"/><stop offset=".5" stop-color="#7b5cff"/><stop offset="1" stop-color="#19e3ff"/>
+            </linearGradient>
+            <linearGradient id="xp" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#19e3ff"/><stop offset="1" stop-color="#ff2bd6"/>
+            </linearGradient>
+            <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="vignette" cx=".5" cy="0" r="1">
+              <stop offset="0" stop-color="#2a1650" stop-opacity=".9"/><stop offset=".6" stop-color="#0a0a14" stop-opacity="0"/>
+            </radialGradient>
+            <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M28 0H0V28" fill="none" stroke="#ffffff" stroke-opacity=".045"/>
+            </pattern>
+            <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+              <rect width="4" height="1" fill="#000" fill-opacity=".22"/>
+            </pattern>
+            <filter id="glow" x="-30%" y="-60%" width="160%" height="220%">
+              <feGaussianBlur stdDeviation="9"/>
+            </filter>
+            <filter id="softglow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="round" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>
+            <clipPath id="bar"><rect x="{PAD}" y="206" width="{bar_w}" height="14" rx="7"/></clipPath>
+          </defs>
+          <style>
+            .count {{ animation: pulse 3s ease-in-out infinite; }}
+            .ring  {{ animation: pulse 3s ease-in-out infinite; }}
+            .shine {{ animation: sweep 2.8s linear infinite; }}
+            .lock  {{ animation: blink 1.6s steps(2, start) infinite; }}
+            @keyframes pulse {{ 0%,100% {{ opacity: 1 }} 50% {{ opacity: .72 }} }}
+            @keyframes sweep {{ from {{ transform: translateX(-160px) }} to {{ transform: translateX({bar_w + 160}px) }} }}
+            @keyframes blink {{ to {{ opacity: .35 }} }}
+            @media (prefers-reduced-motion: reduce) {{ .count, .ring, .shine, .lock {{ animation: none }} }}
+          </style>
+          <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="20" fill="#0a0a14"/>
+          <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="20" fill="url(#vignette)"/>
+          <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="20" fill="url(#grid)"/>
+          <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="20" fill="url(#scan)"/>
+          <rect x="2" y="2" width="{W - 4}" height="{H - 4}" rx="19" fill="none" stroke="url(#neon)" stroke-width="3"/>
+          <path d="M{PAD} 24h60M{W - PAD - 60} {H - 24}h60" stroke="url(#neon)" stroke-width="3" stroke-linecap="round"/>
+
+          <text x="{PAD}" y="62" font-family="{mono}" font-size="15" font-weight="700" letter-spacing="4" fill="#8f93c9">SCRATCH FOLLOWERS</text>
+          <text class="count" x="{PAD - 4}" y="158" font-family="{mono}" font-size="96" font-weight="800" fill="#19e3ff" opacity=".9" filter="url(#glow)">{count:,}</text>
+          <text x="{PAD - 4}" y="158" font-family="{mono}" font-size="96" font-weight="800" fill="#ffffff">{count:,}</text>
+          <text x="{PAD}" y="186" font-family="{mono}" font-size="15" fill="#19e3ff">@{e(scratch_user)}</text>''')
+
+              # Level box (top right)
+              bx, bw = W - PAD - 190, 190
+              o.append(f'''
+          <rect x="{bx}" y="40" width="{bw}" height="128" rx="14" fill="#120f24" stroke="#ff2bd6" stroke-opacity=".55" stroke-width="2"/>
+          <text x="{bx + bw / 2}" y="72" text-anchor="middle" font-family="{mono}" font-size="14" font-weight="700" letter-spacing="5" fill="#ff7be6">LEVEL</text>
+          <text x="{bx + bw / 2}" y="140" text-anchor="middle" font-family="{mono}" font-size="62" font-weight="800" fill="#ff2bd6" filter="url(#softglow)">{level}</text>
+          <text x="{bx + bw / 2}" y="160" text-anchor="middle" font-family="{mono}" font-size="11" letter-spacing="1" fill="#8f93c9">{every} FOLLOWERS / LEVEL</text>''')
+
+              if github is not None:
+                  o.append(f'''
+          <rect x="{bx - 210}" y="40" width="190" height="40" rx="10" fill="#120f24" stroke="#19e3ff" stroke-opacity=".5"/>
+          <text x="{bx - 115}" y="66" text-anchor="middle" font-family="{mono}" font-size="14" font-weight="700" fill="#19e3ff">GITHUB · {github:,}</text>''')
+
+              # XP bar
+              left = nxt - count
+              o.append(f'''
+          <rect x="{PAD}" y="206" width="{bar_w}" height="14" rx="7" fill="#1b1830" stroke="#2c2850"/>
+          <g clip-path="url(#bar)">
+            <rect x="{PAD}" y="206" width="{fill_w:.1f}" height="14" fill="url(#xp)" filter="url(#softglow)"/>
+            <rect class="shine" x="{PAD}" y="206" width="120" height="14" fill="url(#shine)" opacity=".7"/>
+          </g>
+          <text x="{PAD}" y="246" font-family="{mono}" font-size="14" font-weight="700" fill="#d9dcff">XP {into}/{every}{'  <tspan fill="#ffc531">★ LEVEL UP!</tspan>' if into == 0 and count else ''}</text>
+          <text x="{W - PAD}" y="246" text-anchor="end" font-family="{mono}" font-size="14" fill="#8f93c9">{left} MORE TO <tspan fill="#ffc531" font-weight="700">LEVEL {level + 1}</tspan></text>''')
+
+              # Achievements
+              unlocked = len(milestones)
+              o.append(f'''
+          <text x="{PAD}" y="{grid_top - 4}" font-family="{mono}" font-size="15" font-weight="700" letter-spacing="4" fill="#ffc531">★ ACHIEVEMENTS UNLOCKED</text>
+          <text x="{W - PAD}" y="{grid_top - 4}" text-anchor="end" font-family="{mono}" font-size="13" fill="#8f93c9">EVERY {every}TH FOLLOWER · {unlocked} UNLOCKED</text>''')
+
+              r = 38
+              for i, s in enumerate(slots):
+                  cx = PAD + cell * (i % per_row) + cell / 2
+                  cy = grid_top + 30 + r + 150 * (i // per_row)
+                  rank = ordinal(s["n"]).upper()
+                  if s["locked"]:
+                      o.append(f'''
+          <g class="lock">
+            <circle cx="{cx:.1f}" cy="{cy}" r="{r}" fill="#120f24" stroke="#4a4580" stroke-width="2.5" stroke-dasharray="6 6"/>
+            <text x="{cx:.1f}" y="{cy + 13}" text-anchor="middle" font-family="{mono}" font-size="36" font-weight="800" fill="#4a4580">?</text>
+          </g>
+          <text x="{cx:.1f}" y="{cy + r + 30}" text-anchor="middle" font-family="{mono}" font-size="13" font-weight="800" fill="#4a4580">{rank}</text>
+          <text x="{cx:.1f}" y="{cy + r + 49}" text-anchor="middle" font-family="{mono}" font-size="12" fill="#4a4580">LOCKED</text>''')
+                      continue
+                  pic = avatar(s.get("img"))
+                  o.append(f'''
+          <circle class="ring" cx="{cx:.1f}" cy="{cy}" r="{r + 5}" fill="none" stroke="#ffc531" stroke-width="3" filter="url(#softglow)"/>
+          <circle cx="{cx:.1f}" cy="{cy}" r="{r}" fill="#2a2450"/>''')
+                  if pic:
+                      o.append(f'''
+          <image x="{cx - r:.1f}" y="{cy - r}" width="{2 * r}" height="{2 * r}" href="{pic}" clip-path="url(#round)" preserveAspectRatio="xMidYMid slice"/>''')
+                  else:
+                      o.append(f'''
+          <text x="{cx:.1f}" y="{cy + 12}" text-anchor="middle" font-family="{sans}" font-size="34" font-weight="800" fill="#d9dcff">{e(s["name"][:1].upper())}</text>''')
+                  pill_w = 10 + 8.6 * len(rank)
+                  o.append(f'''
+          <rect x="{cx - pill_w / 2:.1f}" y="{cy + r + 14}" width="{pill_w:.1f}" height="22" rx="11" fill="#ffc531"/>
+          <text x="{cx:.1f}" y="{cy + r + 30}" text-anchor="middle" font-family="{mono}" font-size="13" font-weight="800" fill="#1a1300">{rank}</text>
+          <text x="{cx:.1f}" y="{cy + r + 54}" text-anchor="middle" font-family="{sans}" font-size="13" font-weight="600" fill="#d9dcff">{e(short(s["name"]))}</text>''')
+
+              # Footer
+              fy = H - 34
+              if newest:
+                  o.append(f'''
+          <text x="{PAD}" y="{fy}" font-family="{mono}" font-size="13" fill="#8f93c9">NEWEST FOLLOWER <tspan fill="#19e3ff" font-weight="700">▸ {e(newest)}</tspan></text>''')
+              o.append(f'''
+          <text x="{W - PAD - 70}" y="{fy}" text-anchor="end" font-family="{mono}" font-size="12" fill="#5d6094">LIVE · UPDATES EVERY 15 MIN</text>
+          </svg>
+          ''')
+              return "".join(o)
+
+          # ================= Follower.md =================
 
           def grid(people, per_row):
               rows = []
@@ -190,15 +327,31 @@ jobs:
                   rows.append(f"  <tr>{cells}</tr>")
               return "<table>\n" + "\n".join(rows) + "\n</table>"
 
+          # ================= README =================
+
+          def markers(kind):
+              start = f"<!-- {kind}:{scratch_user}:start -->"
+              end = f"<!-- {kind}:{scratch_user}:end -->"
+              return start, end, re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+
+          def put_block(text, kind, inner):
+              start, end, pattern = markers(kind)
+              block = f"{start}\n{inner}\n{end}"
+              if pattern.search(text):
+                  return pattern.sub(lambda m: block, text)
+              return text.rstrip("\n") + ("\n\n" if text.strip() else "") + block + "\n"
+
+          def drop_block(text, kind):
+              return re.sub(r"\n{3,}", "\n\n", markers(kind)[2].sub("", text))
+
           def build():
               readme = pathlib.Path("README.md")
               text = readme.read_text(encoding="utf-8") if readme.exists() else ""
+              old = markers("scratch-followers")[2].search(text)
 
-              # --- Badges ---
-              badge_block = markers("scratch-followers")[2].search(text)
               def previous(site):
                   # If a site is down, keep the number that's already in the README.
-                  m = badge_block and re.search(r'alt="([\d,]+) ' + site + r' follower', badge_block.group(0))
+                  m = old and re.search(r"([\d,]+) " + site + r" follower", old.group(0))
                   return int(m.group(1).replace(",", "")) if m else None
               shown = {}
               for site, n in counts.items():
@@ -207,54 +360,45 @@ jobs:
                       print(f"::warning::Couldn't get {site} followers, keeping the old number ({n}).")
                   if n is not None:
                       shown[site] = n
-              styles = {
-                  "Scratch": (f"https://scratch.mit.edu/users/{scratch_user}/followers/", "F9A825", "scratch"),
-                  "GitHub": (f"https://github.com/{github_user}?tab=followers", "181717", "github"),
-              }
-              badges = []
-              for site, n in shown.items():
-                  link, color, logo = styles[site]
-                  label = "follower" if n == 1 else "followers"
-                  src = f"https://img.shields.io/badge/{site}-{n:,}%20{label}-{color}?style=for-the-badge&logo={logo}&logoColor=white"
-                  badges.append(f'  <a href="{link}"><img src="{src}" {size_attrs(src)} alt="{n:,} {site} {label}"></a>')
-              if badges:
-                  text = put_block(text, "scratch-followers", '<p align="center">\n' + "\n  &nbsp;\n".join(badges) + "\n</p>")
+              if "Scratch" not in shown:
+                  return None
 
-              # --- Milestone followers (10th, 20th, ...) in the README and Follower.md ---
-              # Remove the old "Newest followers" section from the earlier version.
-              text = markers("scratch-newest-followers")[2].sub("", text)
-              text = re.sub(r"\n{3,}", "\n\n", text)
+              total = shown["Scratch"]
+              people = followers or []
+              oldest_first = [{**p, "n": i + 1} for i, p in enumerate(reversed(people))][:total]
+              milestones = [p for p in oldest_first if p["n"] % every == 0]
+              newest = oldest_first[-1]["name"] if oldest_first else None
+
+              if followers or not pathlib.Path(CARD).exists():
+                  svg = make_card(total, milestones, newest, shown.get("GitHub"))
+                  pathlib.Path(CARD).write_text(svg, encoding="utf-8")
+              svg = pathlib.Path(CARD).read_text(encoding="utf-8")
+              v = hashlib.sha256(svg.encode()).hexdigest()[:8]
+
+              repo = os.environ.get("GITHUB_REPOSITORY", f"{github_user}/{github_user}")
+              all_link = f"https://github.com/{repo}/blob/{os.environ.get('BRANCH', 'main')}/Follower.md"
+              alt = f"{total:,} Scratch followers" + (f" · {shown['GitHub']:,} GitHub followers" if "GitHub" in shown else "")
+              text = put_block(text, "scratch-followers",
+                  f'<p align="center">\n'
+                  f'  <a href="https://scratch.mit.edu/users/{scratch_user}/followers/">'
+                  f'<img src="{CARD}?v={v}" width="100%" alt="{alt}"></a>\n'
+                  f'</p>\n'
+                  f'<p align="center"><a href="{all_link}"><b>View all followers here →</b></a></p>')
+              # Sections from earlier versions now live inside the card.
+              text = drop_block(text, "scratch-follower-milestones")
+              text = drop_block(text, "scratch-newest-followers")
+              readme.write_text(text, encoding="utf-8")
+
               if followers:
-                  # Number everyone by when they followed: oldest = 1st.
-                  total = min(len(followers), shown.get("Scratch", len(followers)))
-                  oldest_first = [{**p, "n": i + 1} for i, p in enumerate(reversed(followers))][:total]
-                  milestones = [p for p in oldest_first if p["n"] % every == 0]
-                  repo = os.environ.get("GITHUB_REPOSITORY", f"{github_user}/{github_user}")
-                  all_link = f"https://github.com/{repo}/blob/{os.environ.get('BRANCH', 'main')}/Follower.md"
-                  view_all = f'<p align="center"><a href="{all_link}">View all followers here →</a></p>'
-                  if milestones:
-                      text = put_block(
-                          text, "scratch-follower-milestones",
-                          '<p align="center"><b>🏆 Follower milestones</b></p>\n'
-                          '<div align="center">\n\n' + grid(milestones, 5) + "\n\n</div>\n" + view_all,
-                          after_kind="scratch-followers",
-                      )
-                  else:
-                      text = put_block(text, "scratch-follower-milestones", view_all, after_kind="scratch-followers")
-                  # Follower.md: everyone, newest first, with milestone followers marked with a 🏆.
-                  everyone = list(reversed(oldest_first))
-                  def mark(p):
-                      return {**p, "trophy": p["n"] % every == 0}
+                  everyone = [{**p, "trophy": p["n"] % every == 0} for p in reversed(oldest_first)]
                   pathlib.Path("Follower.md").write_text(
                       f"<!-- This file is rewritten automatically by the Follower counts workflow. -->\n"
                       f'<h1 align="center">{scratch_user}\'s Scratch followers ({total:,})</h1>\n\n'
                       f'<p align="center">Newest first · 🏆 = every {every}th follower · '
                       f'<a href="https://github.com/{github_user}">← Back to profile</a></p>\n\n'
-                      '<div align="center">\n\n' + grid([mark(p) for p in everyone], 6) + "\n\n</div>\n",
+                      '<div align="center">\n\n' + grid(everyone, 6) + "\n\n</div>\n",
                       encoding="utf-8",
                   )
-
-              readme.write_text(text, encoding="utf-8")
               return ", ".join(f"{s} {n}" for s, n in shown.items())
 
           # ================= Save and push =================
@@ -278,9 +422,11 @@ jobs:
               git("fetch", "origin", branch)
               git("reset", "--hard", f"origin/{branch}")
               summary = build()
-              git("add", "README.md")
-              if pathlib.Path("Follower.md").exists():
-                  git("add", "Follower.md")
+              if summary is None:
+                  raise SystemExit("::error::No follower count to show, leaving everything alone.")
+              for f in ("README.md", "Follower.md", CARD):
+                  if pathlib.Path(f).exists():
+                      git("add", f)
               if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
                   print("Nothing changed, nothing to commit.")
                   break
