@@ -4,6 +4,7 @@
 
 <h3 align="center">Welcome to blockblock2's Profile!</h3>
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
+
 <!-- SCRATCHAVERSARY:START -->
 🐱 **267 days** until my 3rd Scratchaversary (July 2, 2027)  
 `█████░░░░░░░░░░░░░░░` 27%  

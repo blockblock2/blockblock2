@@ -11,13 +11,13 @@ const START = "<!-- SCRATCH-SCORE:START -->";
 const END = "<!-- SCRATCH-SCORE:END -->";
 
 // Score needed for the full 20 points in each stat.
-const TARGETS = { stars: 100, hearts: 100, remixes: 25, studio_invites: 25, followers: 100 };
+const TARGETS = { stars: 200, hearts: 200, remixes: 50, studio_invites: 50, followers: 200 };
 
 const API = 'https://api.scratch.mit.edu';
 const PAGE = 40; // Scratch API max page size
 
-// Each stat is worth 20 points (5 x 20 = 100). Points grow on a log curve,
-// so the first few hearts count a lot and the bar fills completely at the target.
+// Each stat is worth 20 points (5 x 20 = 100). Points grow evenly and
+// the stat only maxes out when it reaches its target.
 const CATEGORIES = [
   { key: 'stars',          label: 'Stars',          icon: '★', color: '#f5b400' },
   { key: 'hearts',         label: 'Hearts',         icon: '♥', color: '#ef4a6b' },
@@ -48,8 +48,9 @@ async function getAll(endpoint, maxPages) {
 }
 
 function points(value, target) {
+  // Straight line: half the target = 10 points, the full target = 20.
   if (!(value > 0)) return 0;
-  return 20 * Math.min(1, Math.log1p(value) / Math.log1p(target));
+  return 20 * Math.min(1, value / target);
 }
 
 function score(stats, targets) {
