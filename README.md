@@ -11,8 +11,9 @@
 <!-- SCRATCHAVERSARY:END -->
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="https://img.shields.io/badge/Scratch-82%20followers-F9A825?style=for-the-badge&logo=scratch&logoColor=white" width="382" height="48" alt="82 Scratch followers"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=6bac9f6f" width="100%" alt="82 Scratch followers"></a>
 </p>
+<p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md"><b>View all followers here →</b></a></p>
 <!-- scratch-followers:blockblock2:end -->
 
 <!-- SCRATCH-SCORE:START -->
@@ -20,17 +21,4 @@
   <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg" width="520" alt="Scratch score: 79 out of 100"></a>
 </p>
 <!-- SCRATCH-SCORE:END -->
-
-<!-- scratch-follower-milestones:blockblock2:start -->
-<p align="center"><b>🏆 Follower milestones</b></p>
-<div align="center">
-
-<table>
-  <tr><td align="center"><b>10th</b><br><a href="https://scratch.mit.edu/users/AwesomeKat-1/"><img src="https://cdn2.scratch.mit.edu/get_image/user/123548558_60x60.png" width="60" height="60" alt="AwesomeKat-1"><br><sub>AwesomeKat-1</sub></a></td><td align="center"><b>20th</b><br><a href="https://scratch.mit.edu/users/Onion3S4B/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173254688_60x60.png" width="60" height="60" alt="Onion3S4B"><br><sub>Onion3S4B</sub></a></td><td align="center"><b>30th</b><br><a href="https://scratch.mit.edu/users/icecat2018/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173923164_60x60.png" width="60" height="60" alt="icecat2018"><br><sub>icecat2018</sub></a></td><td align="center"><b>40th</b><br><a href="https://scratch.mit.edu/users/thekidddo/"><img src="https://cdn2.scratch.mit.edu/get_image/user/145061912_60x60.png" width="60" height="60" alt="thekidddo"><br><sub>thekidddo</sub></a></td><td align="center"><b>50th</b><br><a href="https://scratch.mit.edu/users/Wayour3_/"><img src="https://cdn2.scratch.mit.edu/get_image/user/175188478_60x60.png" width="60" height="60" alt="Wayour3_"><br><sub>Wayour3_</sub></a></td></tr>
-  <tr><td align="center"><b>60th</b><br><a href="https://scratch.mit.edu/users/cittykat6633/"><img src="https://cdn2.scratch.mit.edu/get_image/user/173433473_60x60.png" width="60" height="60" alt="cittykat6633"><br><sub>cittykat6633</sub></a></td><td align="center"><b>70th</b><br><a href="https://scratch.mit.edu/users/blocks_TEST/"><img src="https://cdn2.scratch.mit.edu/get_image/user/174504338_60x60.png" width="60" height="60" alt="blocks_TEST"><br><sub>blocks_TEST</sub></a></td><td align="center"><b>80th</b><br><a href="https://scratch.mit.edu/users/KrisTheHedgehogYT/"><img src="https://cdn2.scratch.mit.edu/get_image/user/175867790_60x60.png" width="60" height="60" alt="KrisTheHedgehogYT"><br><sub>KrisTheHedgehogYT</sub></a></td></tr>
-</table>
-
-</div>
-<p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md">View all followers here →</a></p>
-<!-- scratch-follower-milestones:blockblock2:end -->
 
