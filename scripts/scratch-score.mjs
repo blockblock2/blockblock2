@@ -122,7 +122,15 @@ const projects = await getAll(`/users/${u}/projects`, 50);
 const followers = await getAll(`/users/${u}/followers`, 250);
 const studios = await getAll(`/users/${u}/studios/curate`, 50);
 
-const sum = (k) => projects.items.reduce((s, p) => s + (p.stats?.[k] || 0), 0);
+// The project list always says 0 remixes, so ask each project for its real stats
+// (a few at a time to go easy on Scratch). Falls back to the list's numbers.
+const detailed = [];
+for (let i = 0; i < projects.items.length; i += 8) {
+  const batch = projects.items.slice(i, i + 8);
+  detailed.push(...await Promise.all(batch.map((p) =>
+    getJSON(`${API}/projects/${p.id}`).catch(() => p))));
+}
+const sum = (k) => detailed.reduce((s, p) => s + (p.stats?.[k] || 0), 0);
 const stats = {
   stars: sum("favorites"),
   hearts: sum("loves"),
