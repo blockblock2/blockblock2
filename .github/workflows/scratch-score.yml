@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SCRATCH_USER: blockblock2
-      SCORE_THEME: light # change to "dark" for a dark bar
     steps:
       - uses: actions/checkout@v4
 
