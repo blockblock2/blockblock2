@@ -16,6 +16,9 @@
 <!-- scratch-followers:blockblock2:end -->
 
 <!-- SCRATCH-SCORE:START -->
+<p align="center">
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg" width="520" alt="Scratch score: 79 out of 100"></a>
+</p>
 <!-- SCRATCH-SCORE:END -->
 
 <!-- scratch-follower-milestones:blockblock2:start -->
