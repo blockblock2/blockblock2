@@ -15,6 +15,9 @@
 </p>
 <!-- scratch-followers:blockblock2:end -->
 
+<!-- SCRATCH-SCORE:START -->
+<!-- SCRATCH-SCORE:END -->
+
 <!-- scratch-follower-milestones:blockblock2:start -->
 <p align="center"><b>🏆 Follower milestones</b></p>
 <div align="center">

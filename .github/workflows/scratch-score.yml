@@ -1,0 +1,39 @@
+name: Scratch score
+
+on:
+  schedule:
+    - cron: "47 */6 * * *" # every 6 hours
+  workflow_dispatch: # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      SCRATCH_USER: blockblock2
+      SCORE_THEME: light # change to "dark" for a dark bar
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update score
+        run: node scripts/scratch-score.mjs
+
+      - name: Commit if changed
+        run: |
+          git add scratch-score.svg README.md
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "📊 Update Scratch score"
+          # The follower workflow commits often, so catch up before pushing.
+          git pull --rebase
+          git push
