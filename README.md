@@ -17,7 +17,7 @@
 <!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=6bac9f6f" width="100%" alt="82 Scratch followers"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=5eabd9d7" width="100%" alt="82 Scratch followers"></a>
 </p>
 <p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md"><b>View all followers here →</b></a></p>
 <!-- scratch-followers:blockblock2:end -->
