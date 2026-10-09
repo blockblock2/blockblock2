@@ -1,7 +1,11 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/blockblock2/blockblock2/main/09_glitch.gif" width="450" alt="My Profile Animation">
 </p>
-<iframe src="https://scratch.mit.edu/projects/1332724384/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+<p align="center">
+  <a href="https://scratch.mit.edu/projects/1332724384/"><img src="https://cdn2.scratch.mit.edu/get_image/project/1332724384_480x360.png" width="485" alt="Play my Scratch project"></a>
+  <br>
+  <a href="https://scratch.mit.edu/projects/1332724384/"><b>▶️ Play on Scratch</b></a>
+</p>
 <h3 align="center">Welcome to blockblock2's Profile!</h3>
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 
