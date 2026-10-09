@@ -6,7 +6,7 @@
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 
 <!-- SCRATCHAVERSARY:START -->
-🐱 **267 days** until my 3rd Scratchaversary (July 2, 2027)  
+🐱 **266 days** until my 3rd Scratchaversary (July 2, 2027)  
 `█████░░░░░░░░░░░░░░░` 27%  
 <sub>Scratcher since July 2, 2024</sub>
 <!-- SCRATCHAVERSARY:END -->
