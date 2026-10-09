@@ -54,6 +54,11 @@ for c in sprite["costumes"]:
         cx, cy = c["rotationCenterX"] * f, c["rotationCenterY"] * f
     frames.append((img, cx, cy))
 
+# Full-frame animations (every costume the same size) often have messy rotation
+# centres, so line those up edge to edge instead.
+if len({i.size for i, _, _ in frames}) == 1:
+    frames = [(i, 0, 0) for i, _, _ in frames]
+
 # Union bounding box of all frames around the shared centre, then trim empty space.
 left = min(-cx for _, cx, _ in frames)
 top = min(-cy for _, _, cy in frames)
@@ -82,7 +87,7 @@ for c in canvases:
         c = c.resize((WIDTH, round(c.height * WIDTH / c.width)), Image.LANCZOS)
     bg = Image.new("RGBA", c.size, (255, 255, 255, 255))
     bg.alpha_composite(c)
-    out.append(bg.convert("RGB").quantize(colors=255, method=Image.MEDIANCUT))
+    out.append(bg.convert("RGB").quantize(colors=96, method=Image.MEDIANCUT))
 
 out[0].save(OUT, save_all=True, append_images=out[1:], duration=DELAY, loop=0, optimize=True, disposal=2)
 print(f"Wrote {OUT}: {len(out)} frames, {out[0].width}x{out[0].height}")
