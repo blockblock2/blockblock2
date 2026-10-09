@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/blockblock2/blockblock2/main/09_glitch.gif" width="450" alt="My Profile Animation">
 </p>
 <p align="center">
-  <a href="https://scratch.mit.edu/projects/1332724384/"><img src="scratch-project.gif?v=779dd22b" width="485" alt="Nyan elevater — play on Scratch"></a>
+  <a href="https://scratch.mit.edu/projects/1332724384/"><img src="scratch-project.gif?v=9df08661" width="485" alt="Nyan elevater — play on Scratch"></a>
   <br>
   <a href="https://scratch.mit.edu/projects/1332724384/"><b>▶️ Play on Scratch</b></a>
 </p>
