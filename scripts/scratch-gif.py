@@ -37,57 +37,46 @@ else:
     sprite = max(sprites, key=lambda t: len(t["costumes"]))
 print(f"Animating sprite {sprite['name']!r} ({len(sprite['costumes'])} costumes) from {meta['title']!r}")
 
-# Render every costume at the same scale, keyed to its rotation centre.
-SCALE = 2  # px per Scratch unit
-frames = []
-for c in sprite["costumes"]:
+SCALE = 2  # px per Scratch unit (stage is 480x360 units)
+
+
+def render(c, size=1.0):
+    """Costume as an RGBA image at SCALE, plus its rotation centre in px."""
     data = get(f"https://assets.scratch.mit.edu/internalapi/asset/{c['md5ext']}/get/")
     res = c.get("bitmapResolution") or 1
     if c["dataFormat"] == "svg":
-        img = Image.open(io.BytesIO(cairosvg.svg2png(bytestring=data, scale=SCALE))).convert("RGBA")
-        cx, cy = c["rotationCenterX"] * SCALE, c["rotationCenterY"] * SCALE
+        img = Image.open(io.BytesIO(cairosvg.svg2png(bytestring=data, scale=SCALE * size))).convert("RGBA")
+        f = SCALE * size
     else:
         img = Image.open(io.BytesIO(data)).convert("RGBA")
-        f = SCALE / res
+        f = SCALE * size / res
         if f != 1:
             img = img.resize((max(1, round(img.width * f)), max(1, round(img.height * f))), Image.LANCZOS)
-        cx, cy = c["rotationCenterX"] * f, c["rotationCenterY"] * f
-    frames.append((img, cx, cy))
+    return img, c["rotationCenterX"] * f, c["rotationCenterY"] * f
 
-# Full-frame animations (every costume the same size) often have messy rotation
-# centres, so line those up edge to edge instead.
-if len({i.size for i, _, _ in frames}) == 1:
-    frames = [(i, 0, 0) for i, _, _ in frames]
 
-# Union bounding box of all frames around the shared centre, then trim empty space.
-left = min(-cx for _, cx, _ in frames)
-top = min(-cy for _, _, cy in frames)
-right = max(i.width - cx for i, cx, _ in frames)
-bottom = max(i.height - cy for i, _, cy in frames)
-W, H = round(right - left), round(bottom - top)
+# Draw each frame the way Scratch shows it: the stage's backdrop, with the
+# sprite on top at its saved position and size.
+stage = next(t for t in project["targets"] if t.get("isStage"))
+W, H = 480 * SCALE, 360 * SCALE
+backdrop = Image.new("RGBA", (W, H), (255, 255, 255, 255))
+if stage["costumes"]:
+    bimg, bx, by = render(stage["costumes"][stage.get("currentCostume", 0)])
+    backdrop.alpha_composite(bimg, (round(W / 2 - bx), round(H / 2 - by)))
 
-canvases = []
-for img, cx, cy in frames:
-    canvas = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    canvas.alpha_composite(img, (round(-cx - left), round(-cy - top)))
-    canvases.append(canvas)
-
-box = None
-for c in canvases:
-    b = c.getbbox()
-    if b:
-        box = b if box is None else (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
-pad = 8
-box = (max(0, box[0] - pad), max(0, box[1] - pad), min(W, box[2] + pad), min(H, box[3] + pad))
+size = (sprite.get("size") or 100) / 100
+px, py = (240 + sprite.get("x", 0)) * SCALE, (180 - sprite.get("y", 0)) * SCALE
 
 out = []
-for c in canvases:
-    c = c.crop(box)
-    if c.width > WIDTH:
-        c = c.resize((WIDTH, round(c.height * WIDTH / c.width)), Image.LANCZOS)
-    bg = Image.new("RGBA", c.size, (255, 255, 255, 255))
-    bg.alpha_composite(c)
-    out.append(bg.convert("RGB").quantize(colors=96, method=Image.MEDIANCUT))
+for c in sprite["costumes"]:
+    img, cx, cy = render(c, size)
+    frame = backdrop.copy()
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    layer.paste(img, (round(px - cx), round(py - cy)), img)
+    frame.alpha_composite(layer)
+    if frame.width > WIDTH:
+        frame = frame.resize((WIDTH, round(frame.height * WIDTH / frame.width)), Image.LANCZOS)
+    out.append(frame.convert("RGB").quantize(colors=96, method=Image.MEDIANCUT))
 
 out[0].save(OUT, save_all=True, append_images=out[1:], duration=DELAY, loop=0, optimize=True, disposal=2)
 print(f"Wrote {OUT}: {len(out)} frames, {out[0].width}x{out[0].height}")
