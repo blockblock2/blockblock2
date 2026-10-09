@@ -1,0 +1,57 @@
+name: Scratch project GIF
+
+on:
+  workflow_dispatch:
+    inputs:
+      sprite:
+        description: "Sprite to animate (blank = the one with the most costumes)"
+        required: false
+        default: ""
+      delay_ms:
+        description: "Milliseconds per frame"
+        required: false
+        default: "100"
+  schedule:
+    - cron: "17 5 * * *" # daily, picks up costume changes
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readme-scratch-gif
+  cancel-in-progress: false
+
+jobs:
+  gif:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: "1332724384"
+      SPRITE: ${{ inputs.sprite }}
+      DELAY_MS: ${{ inputs.delay_ms || '100' }}
+      WIDTH: "485"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install cairosvg pillow
+
+      - name: Build GIF
+        run: python scripts/scratch-gif.py
+
+      - name: Commit if changed
+        run: |
+          git add scratch-project.gif README.md
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "🎞️ Update Scratch project GIF"
+          git pull --rebase
+          git push
