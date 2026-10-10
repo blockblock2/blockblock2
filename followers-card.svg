@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="860" height="676" viewBox="0 0 860 676" role="img" aria-label="82 Scratch followers">
-<title>blockblock2: 82 Scratch followers</title>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="860" height="676" viewBox="0 0 860 676" role="img" aria-label="83 Scratch followers">
+<title>blockblock2: 83 Scratch followers</title>
 <defs>
   <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#ff2bd6"/><stop offset=".5" stop-color="#7b5cff"/><stop offset="1" stop-color="#19e3ff"/>
@@ -46,8 +46,8 @@
 <path d="M40 24h60M760 652h60" stroke="url(#neon)" stroke-width="3" stroke-linecap="round"/>
 
 <text x="40" y="62" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" font-weight="700" letter-spacing="4" fill="#8f93c9">SCRATCH FOLLOWERS</text>
-<text class="count" x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#19e3ff" opacity=".9" filter="url(#glow)">82</text>
-<text x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#ffffff">82</text>
+<text class="count" x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#19e3ff" opacity=".9" filter="url(#glow)">83</text>
+<text x="36" y="158" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="96" font-weight="800" fill="#ffffff">83</text>
 <text x="40" y="186" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" fill="#19e3ff">@blockblock2</text>
 <rect x="630" y="40" width="190" height="128" rx="14" fill="#120f24" stroke="#ff2bd6" stroke-opacity=".55" stroke-width="2"/>
 <text x="725.0" y="72" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" letter-spacing="5" fill="#ff7be6">LEVEL</text>
@@ -55,11 +55,11 @@
 <text x="725.0" y="160" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" letter-spacing="1" fill="#8f93c9">10 FOLLOWERS / LEVEL</text>
 <rect x="40" y="206" width="780" height="14" rx="7" fill="#1b1830" stroke="#2c2850"/>
 <g clip-path="url(#bar)">
-  <rect x="40" y="206" width="156.0" height="14" fill="url(#xp)" filter="url(#softglow)"/>
+  <rect x="40" y="206" width="234.0" height="14" fill="url(#xp)" filter="url(#softglow)"/>
   <rect class="shine" x="40" y="206" width="120" height="14" fill="url(#shine)" opacity=".7"/>
 </g>
-<text x="40" y="246" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" fill="#d9dcff">XP 2/10</text>
-<text x="820" y="246" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" fill="#8f93c9">8 MORE TO <tspan fill="#ffc531" font-weight="700">LEVEL 9</tspan></text>
+<text x="40" y="246" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" font-weight="700" fill="#d9dcff">XP 3/10</text>
+<text x="820" y="246" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" fill="#8f93c9">7 MORE TO <tspan fill="#ffc531" font-weight="700">LEVEL 9</tspan></text>
 <text x="40" y="286" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="15" font-weight="700" letter-spacing="4" fill="#ffc531">★ ACHIEVEMENTS UNLOCKED</text>
 <text x="820" y="286" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">EVERY 10TH FOLLOWER · 8 UNLOCKED</text>
 <circle class="ring" cx="95.7" cy="358" r="43" fill="none" stroke="#ffc531" stroke-width="3" filter="url(#softglow)"/>
@@ -116,6 +116,6 @@
 </g>
 <text x="207.1" y="576" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="800" fill="#4a4580">90TH</text>
 <text x="207.1" y="595" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12" fill="#4a4580">LOCKED</text>
-<text x="40" y="642" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">NEWEST FOLLOWER <tspan fill="#19e3ff" font-weight="700">▸ Kirbydreamland123</tspan></text>
+<text x="40" y="642" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">NEWEST FOLLOWER <tspan fill="#19e3ff" font-weight="700">▸ riyopi</tspan></text>
 <text x="750" y="642" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12" fill="#5d6094">LIVE · UPDATES EVERY 15 MIN</text>
 </svg>
