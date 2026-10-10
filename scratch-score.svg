@@ -76,10 +76,10 @@
   
   <rect x="675.2" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="691.2" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">FOLLOWERS</text>
-  <text x="691.2" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#a98bff" filter="url(#softglow)">84</text>
+  <text x="691.2" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#a98bff" filter="url(#softglow)">85</text>
   <rect x="691.2" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="691.2" y="396" width="47.4" height="8" rx="4" fill="#a98bff"/>
-  <text x="691.2" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">8.4<tspan fill="#5d6094">/20</tspan></text>
+  <rect x="691.2" y="396" width="47.9" height="8" rx="4" fill="#a98bff"/>
+  <text x="691.2" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">8.5<tspan fill="#5d6094">/20</tspan></text>
   
 
 <text x="40" y="502" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" fill="#8f93c9">BEST STAT <tspan fill="#19e3ff" font-weight="700">▸ STARS</tspan></text>
