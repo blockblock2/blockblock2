@@ -16,7 +16,7 @@
 <!-- SCRATCHAVERSARY:END -->
 <!-- SCRATCH-SCORE:START -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=de57a326" width="100%" alt="Scratch score: 72 out of 100"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=24c657da" width="100%" alt="Scratch score: 73 out of 100"></a>
 </p>
 <!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
