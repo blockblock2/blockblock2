@@ -1,4 +1,4 @@
-"\/ \/" ARE MY MORD GAMES ON SCRATCH ONLINE?
+ARE MY MORD GAMES ON SCRATCH ONLINE?
 
 <a href="https://stats.uptimerobot.com/5jzQjbwGWq?utm_source=status_badge&utm_medium=referral" target="_blank" rel="noopener"><img src="https://badge.uptimerobot.com/psp/a0f35532270b533ac4bc5bd949d6f4c3.svg?style=logo&theme=light" alt="BLOCKBLOCK2's LINKING GAMES"></a>
 
