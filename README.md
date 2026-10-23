@@ -25,7 +25,7 @@ ARE MY MORD GAMES ON SCRATCH ONLINE?
 <!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=deb8a51f" width="100%" alt="85 Scratch followers"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/followers/"><img src="followers-card.svg?v=799bf757" width="100%" alt="86 Scratch followers"></a>
 </p>
 <p align="center"><a href="https://github.com/blockblock2/blockblock2/blob/main/Follower.md"><b>View all followers here →</b></a></p>
 <!-- scratch-followers:blockblock2:end -->
