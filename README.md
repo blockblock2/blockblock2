@@ -20,7 +20,7 @@ ARE MY MORD GAMES ON SCRATCH ONLINE?
 <!-- SCRATCHAVERSARY:END -->
 <!-- SCRATCH-SCORE:START -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=4b72894b" width="100%" alt="Scratch score: 74 out of 100"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=6d7094e9" width="100%" alt="Scratch score: 74 out of 100"></a>
 </p>
 <!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
