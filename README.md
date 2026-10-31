@@ -14,7 +14,7 @@ ARE MY MORD GAMES ON SCRATCH ONLINE?
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 
 <!-- SCRATCHAVERSARY:START -->
-🐱 **245 days** until my 3rd Scratchaversary (July 2, 2027)  
+🐱 **244 days** until my 3rd Scratchaversary (July 2, 2027)  
 `███████░░░░░░░░░░░░░` 33%  
 <sub>Scratcher since July 2, 2024</sub>
 <!-- SCRATCHAVERSARY:END -->
