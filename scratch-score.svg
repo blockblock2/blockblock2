@@ -69,10 +69,10 @@
   
   <rect x="516.4000000000001" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="532.4000000000001" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">INVITES</text>
-  <text x="532.4000000000001" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#19e3ff" filter="url(#softglow)">26</text>
+  <text x="532.4000000000001" y="376" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="34" font-weight="800" fill="#19e3ff" filter="url(#softglow)">27</text>
   <rect x="532.4000000000001" y="396" width="112.80000000000001" height="8" rx="4" fill="#1b1830" stroke="#2c2850"/>
-  <rect x="532.4000000000001" y="396" width="58.7" height="8" rx="4" fill="#19e3ff"/>
-  <text x="532.4000000000001" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">10.4<tspan fill="#5d6094">/20</tspan></text>
+  <rect x="532.4000000000001" y="396" width="60.9" height="8" rx="4" fill="#19e3ff"/>
+  <text x="532.4000000000001" y="430" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" fill="#d9dcff">10.8<tspan fill="#5d6094">/20</tspan></text>
   
   <rect x="675.2" y="300" width="144.8" height="150" rx="14" fill="#120f24" stroke="#4a4580" stroke-opacity=".7" stroke-width="2"/>
   <text x="691.2" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" font-weight="700" letter-spacing="2" fill="#8f93c9">FOLLOWERS</text>
