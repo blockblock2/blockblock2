@@ -20,7 +20,7 @@ ARE MY WORD GAMES ON SCRATCH ONLINE?
 <!-- SCRATCHAVERSARY:END -->
 <!-- SCRATCH-SCORE:START -->
 <p align="center">
-  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=61dd3eaa" width="100%" alt="Scratch score: 76 out of 100"></a>
+  <a href="https://scratch.mit.edu/users/blockblock2/"><img src="scratch-score.svg?v=fad3d9ac" width="100%" alt="Scratch score: 77 out of 100"></a>
 </p>
 <!-- SCRATCH-SCORE:END -->
 <!-- scratch-followers:blockblock2:start -->
