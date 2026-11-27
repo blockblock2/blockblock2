@@ -14,8 +14,8 @@ ARE MY WORD GAMES ON SCRATCH ONLINE?
 <p align="center">Developer of the Generic Black AND MANY MORE series 🕹️</p>
 
 <!-- SCRATCHAVERSARY:START -->
-🐱 **218 days** until my 3rd Scratchaversary (July 2, 2027)  
-`████████░░░░░░░░░░░░` 40%  
+🐱 **217 days** until my 3rd Scratchaversary (July 2, 2027)  
+`████████░░░░░░░░░░░░` 41%  
 <sub>Scratcher since July 2, 2024</sub>
 <!-- SCRATCHAVERSARY:END -->
 <!-- SCRATCH-SCORE:START -->
